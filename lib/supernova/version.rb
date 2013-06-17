@@ -1,3 +1,5 @@
 module Supernova
-  VERSION = "0.0.1"
+
+  # The version of Supernova.
+  VERSION = "0.0.1".freeze
 end
