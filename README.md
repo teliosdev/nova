@@ -21,3 +21,5 @@ fit.  Code to set up a piece of software is a `Star`, a server with stars is cal
 
 ## License
 Supernova is licensed under the MIT License, which can be found [here](LICENSE).
+
+@TODO: note benefit of installing posix-spawn when using local remote.
