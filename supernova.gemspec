@@ -25,4 +25,6 @@ desc
   s.add_dependency 'cocaine', '~> 0.5'
   s.add_dependency 'posix-spawn', '~> 0.3'
   s.add_dependency 'os', '~> 0.9'
+
+  s.add_development_dependency 'rspec'
 end
