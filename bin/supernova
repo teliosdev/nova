@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'supernova'
+require 'supernova/cli'
+
+opts = Supernova::CLI.parse ARGV
+
+cli = Supernova::CLI.new(opts)
+cli.run

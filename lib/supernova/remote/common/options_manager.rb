@@ -42,10 +42,6 @@ module Supernova
             @options = Options.new(options, self.class.options_validator)
           end
 
-          # @!method options=(options)
-          #  Hello, world.
-
-
           # Gives the options.
           #
           # @return [Options]

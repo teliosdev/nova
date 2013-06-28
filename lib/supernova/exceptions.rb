@@ -9,4 +9,8 @@ module Supernova
   # Raised when a Star is tried to be created from a non-existant
   # star type.
   class NoStarError < StandardError; end
+
+  # Raised when a Star is tried to be instantized on a non-compliant
+  # platform.
+  class NoPlatformError < StandardError; end
 end

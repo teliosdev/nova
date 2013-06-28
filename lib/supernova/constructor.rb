@@ -25,14 +25,17 @@ module Supernova
     # @raise [NoStarError] when the star type couldn't be found.
     # @return [Class] a subclass of the star type.
     def create
+
       star_type = Star.types[@options.keys.first]
 
       raise NoStarError,
         "Could not find star type #{@options.keys.first}." unless star_type
 
       new_star = Class.new(star_type)
-      new_star.as = @options[@options.keys.first]
+      new_star.as   = @options.values.first
+      new_star.type = @options.keys.first
       new_star.class_exec &@block
+      new_star.required_platforms = [@options[:requires]].flatten.compact
       new_star
     end
 

@@ -1,6 +1,7 @@
 require 'supernova/remote/fake/platforms'
 require 'supernova/remote/fake/commands'
 require 'supernova/remote/fake/filesystem'
+require 'supernova/remote/fake/operating_system'
 
 module Supernova
 
@@ -17,6 +18,7 @@ module Supernova
       include Fake::Platforms
       include Fake::Commands
       include Fake::Filesystem
+      include Fake::OperatingSystem
 
       extend self
     end

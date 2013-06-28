@@ -23,3 +23,5 @@ fit.  Code to set up a piece of software is a `Star`, a server with stars is cal
 Supernova is licensed under the MIT License, which can be found [here](LICENSE).
 
 @TODO: note benefit of installing posix-spawn when using local remote.
+
+(note: in order to work with libsodium, the location of the library needs to be added to `LD_LIBRARY_PATH`)

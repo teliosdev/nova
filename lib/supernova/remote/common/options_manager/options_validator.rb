@@ -28,7 +28,9 @@ module Supernova
             @required_options.push(*options.flatten)
           end
 
-          alias_method :require_option, :require_options
+          alias_method :require_option,   :require_options
+          alias_method :requires_options, :require_options
+          alias_method :requires_option,  :require_options
 
           # Checks if the given options hash is valid, according
           # to the rules here.

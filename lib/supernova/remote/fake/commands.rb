@@ -1,4 +1,4 @@
-require 'cocaine'
+require 'command/runner'
 
 module Supernova
   module Remote
@@ -8,29 +8,37 @@ module Supernova
       # are ever actually excuted here.)
       module Commands
 
-        # Creates a {Cocaine::CommandLine} with the Supernova logger,
-        # and the FakeRunner.  Returns it.
+        # Creates a CommandLine with its default Runner (most likely
+        # the POSIX spawner).
         #
-        # @param command [String] the command to run.
-        # @param arguments [String] the arguments to accompany the
-        #   command.  If it contains +:symbols+ in the text, they
-        #   can be interpolated when executed.
-        # @param options [Hash] options to be passed to the CommandLine.
-        # @example
-        #   line("echo", "hello :world").command(world: "foo") # => "echo hello foo"
-        # @return {Cocaine::CommandLine}
+        # @see Fake::Commands#line
+        # @param (see Fake::Commands#line)
+        # @return (see Fake::Commands#line)
         def line(command, arguments, options = {})
-          options.merge! logger: Supernova.logger, runner: Cocaine::CommandLine::FakeRunner.new
-          Cocaine::CommandLine.new(command, arguments, options)
+          options.merge! logger: Supernova.logger
+          c = Command::Runner.new(command, arguments, options)
+          c.backend = Command::Runner::Backends::Fake.new
+          c
         end
 
-        # Executes a line with the given command and arguments.
+
+        # Executes a command with the given arguments.
         #
-        # @param (see #line)
-        # @param interops [Hash] the interpolations to be made to the
-        #   command by Cocaine.
+        # @see Fake::Commands#exec
+        # @param (see Fake::Commands#exec)
+        # @return (see Fake::Commands#exec)
         def exec(command, arguments, interops = {}, options = {})
-          line(command, arguments, options).run(interops)
+          line(command, arguments, options).pass(interops)
+        end
+
+
+        # Checks to see if the command exists.
+        #
+        # @param command [String] the command to check the existance
+        #   of.
+        # @return [Boolean]
+        def command_exists?(command)
+          line("which", "{command}").pass(command: command) != ""
         end
 
       end

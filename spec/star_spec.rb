@@ -1,6 +1,11 @@
 require_relative 'star/some_type'
 
 describe Supernova::Star do
+
+  before :each do
+    Supernova::Star.remote = Supernova::Remote::Fake
+  end
+
   context "management" do
     it "handles types" do
       Supernova::Star.types.should eq(star: Supernova::Star, some_type: SomeType)
@@ -12,7 +17,7 @@ describe Supernova::Star do
     end
 
     it "has a default remote" do
-      Supernova::Star.remote.should be(Supernova::Remote::Fake)
+      SomeType.remote.should be(Supernova::Remote::Fake)
     end
 
     it "forwards methods to the remote" do

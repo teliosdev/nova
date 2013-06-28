@@ -1,5 +1,9 @@
 require 'fileutils'
+
+# open-uri invalidates the method cache every time it opens a url.
+# sadface :(
 require 'open-uri'
+
 module Supernova
   module Remote
     module Local
@@ -70,15 +74,20 @@ module Supernova
         # @return [void]
         def decompress_file(file, to)
           Supernova.logger.info { "Decompressing file #{file} to directory #{to}..." }
+          FileUtils.mkpath(to)
 
-          f = File.open(file, "r")
-          top = f.read(4)
-          f.seek(0)
+          data = line("file", "--mime-type {file}").pass(file: file)
+          mime = data.stdout.split(': ')[1]
 
-          if top[0..1] == "\x1f\x8b" # it's a GZIP file.
-            untar_file f, to
-          elsif top[0..3] == "\x50\x4B\003\004" || top[0..3] == "\x50\x4B\005\006" || top[0..3] == "\x50\x4B\007\b" # it's a zip file.
-            unzip_file f, to
+          case mime
+          when "application/x-gzip"
+            untar_file(file, to)
+          when "application/zip"
+            unzip_file(file, to)
+          when "application/x-7z-compressed"
+            unszip_file(file, to)
+          else
+            Supernova.logger.error { "Unknown file type: #{mime}" }
           end
         end
 
@@ -86,23 +95,35 @@ module Supernova
 
         # Untars the given file.
         #
-        # @todo windows support.
+        # @param f [String] the path to the file to untar.
+        # @param to [String] the path to the destination.
+        # @return [Command::Runner::Message] the process data.
         def untar_file(f, to)
-          FileUtils.mkpath(to)
-          line("tar", "-xf :file -C :path").run(file: f.to_path, path: to)
+          line("tar", "-xf {file} -C {path}").pass(file: f, path: to)
         end
 
         # Unzips the file.
         #
-        # @todo windows support.
+        # @param f [String] the path to the file to unzip.
+        # @param to [String] the path to the destination.
+        # @return [Command::Runner::Message] the process data.
         def unzip_file(f, to)
-          FileUtils.mkpath(to)
-
-          begin
-            line("unzip", ":file -d :path", file: f.to_path, path: to)
-          rescue Cocaine::CommandNotFoundError
-            line("gunzip", ":file -d :path", file: f.to_path, path: to)
+          line("unzip", "{file} -d {path}").pass(file: f, path: to) do |m|
+            if m.no_command?
+              line("gunzip", "{file} -d {path}").pass(file: f, path: to)
+            else
+              m
+            end
           end
+        end
+
+        # Un 7zips a file.
+        #
+        # @param f [String] the path to the file.
+        # @param to [String] the path to the destination.
+        # @return [Command::Runner::Message] the process data.
+        def unszip_file(f, to)
+          line("7z", "x -y {archive} -o{dest} * -r").pass(archive: f, dest: to)
         end
 
       end

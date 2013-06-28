@@ -11,7 +11,8 @@ module Supernova
         # Returns an array containing information about the platform the
         # Star is being run on.  Possible values include:
         #  :windows, :windows32, :windows64, :linux, :linux32, :linux64,
-        #  :osx, :osx32, :osx64, :posix, :posix32, :posix64
+        #  :osx, :osx32, :osx64, :posix, :posix32, :posix64, :ubuntu,
+        #  :red_hat, :arch
         #
         # @return [Array<Symbol>]
         def platform

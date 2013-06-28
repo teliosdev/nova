@@ -1,9 +1,10 @@
 require 'logger'
 
 require 'supernova/version'
-require 'supernova/exceptions'
-require 'supernova/star'
 require 'supernova/constructor'
+require 'supernova/exceptions'
+require 'supernova/remote'
+require 'supernova/star'
 
 # A Game management software.
 #
@@ -23,9 +24,11 @@ module Supernova
   #
   # @param options [Hash{Symbol => Symbol}] it should contain a single
   #   key-value pair.  Any others will be ignored.
+  # @yield [] to create the star.
+  # @return [Class] the new star.
   def create(options, &block)
     c = Constructor.new(options, &block).create
-    Star.stars[c.as] = c
+    Star.stars[c.type][c.as] = c
   end
 
   extend self

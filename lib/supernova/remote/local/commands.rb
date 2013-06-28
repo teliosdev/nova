@@ -1,4 +1,4 @@
-require 'cocaine'
+require 'command/runner'
 
 module Supernova
   module Remote
@@ -15,7 +15,7 @@ module Supernova
         # @return (see Fake::Commands#line)
         def line(command, arguments, options = {})
           options.merge! logger: Supernova.logger
-          Cocaine::CommandLine.new(command, arguments, options)
+          Command::Runner.new(command, arguments, options)
         end
 
 
@@ -25,7 +25,17 @@ module Supernova
         # @param (see Fake::Commands#exec)
         # @return (see Fake::Commands#exec)
         def exec(command, arguments, interops = {}, options = {})
-          line(command, arguments, options).run(interops)
+          line(command, arguments, options).pass(interops)
+        end
+
+
+        # Checks to see if the command exists.
+        #
+        # @param command [String] the command to check the existance
+        #   of.
+        # @return [Boolean]
+        def command_exists?(command)
+          !line("which", "{command}").pass(command: command).nonzero_exit?
         end
 
       end

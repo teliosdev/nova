@@ -1,5 +1,7 @@
 require 'forwardable'
 
+require 'os'
+
 module Supernova
   module Remote
     module Local
@@ -13,16 +15,22 @@ module Supernova
         # Returns an array containing information about the platform the
         # Star is being run on.  Possible values include:
         #  :windows, :windows32, :windows64, :linux, :linux32, :linux64,
-        #  :osx, :osx32, :osx64, :posix, :posix32, :posix64
+        #  :osx, :osx32, :osx64, :posix, :posix32, :posix64, :ubuntu,
+        #  :arch, :red_hat
         #
         # @return [Array<Symbol>]
         def platform
           @_platform ||= begin
             os = []
             os << :windows if OS.windows?
-            os << :linux if OS.linux?
-            os << :osx if OS.osx?
-            os << :posix if OS.posix?
+            os << :linux   if OS.linux?
+            os << :osx     if OS.osx?
+            os << :posix   if OS.posix?
+            unless OS.windows? || OS.osx?
+              os << :ubuntu  if command_exists?("apt-get")
+              os << :arch    if command_exists?("pacman")
+              os << :red_hat if command_exists?("yum")
+            end
 
             [
               *os,

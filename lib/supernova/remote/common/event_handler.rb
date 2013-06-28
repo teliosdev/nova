@@ -64,6 +64,12 @@ module Supernova
 
           include ClassMethods
 
+          # Automatically binds the {Star} to itself on initialization.
+          def initialize(_ = nil)
+            bind! self
+            super()
+          end
+
           # Returns the event list.
           #
           # @see ClassMethods#events
