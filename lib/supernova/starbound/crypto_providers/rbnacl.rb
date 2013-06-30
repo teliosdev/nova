@@ -22,6 +22,10 @@ module Supernova
           end
         end
 
+        def self.encrypt_agreement
+          "nacl/#{version}"
+        end
+
         def encrypt(data)
           data[:encrypted] = 1
           data[:nonce] = Crypto::Random.random_bytes(24)

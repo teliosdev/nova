@@ -3,25 +3,8 @@ module Supernova
     class Client
       module Connect
 
-        #Client.handle_packet :connect do |_, client|
-        #  client.private_key = Crypto::PrivateKey.generate
-        #  client_public_key = Crypto::Encoder[:base64].encode(client.private_key.public_key.to_bytes)
-
-        #  client.send_packet :packet_type => Packets::RBNACL_PUBLIC_KEY, :packet_id => client.packet_number+= 1,
-        #    :size => client_public_key.bytesize, :body => client_public_key
-        #end
-
-        #Client.handle_packet Packets::PUBLIC_KEY do |packet, client|
-        #  client.public_key = Crypto::PublicKey.new(packet[:body], :base64)
-        #end
-
-        #Client.handle_packet Packets::ECHO do |packet, client|
-        #  Supernova.logger.info { "Server echoed #{packet.inspect}" }
-        #end
-
         Client.handle :connect do
-          send_message :encrypt_options, available_providers.map { |x|
-            "#{x[0]} #{x[1]}" }.join("\n")
+          send_message :encrypt_options, EncryptAgreement.new.encrypt_options
         end
 
         Client.handle :encrypt_agreement do |packet|

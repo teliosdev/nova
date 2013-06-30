@@ -73,29 +73,29 @@ module Supernova
       end
 
       def read_packet(other = nil)
-          tcp, = IO.select [@tcp_socket], nil, nil, 0.1
+        tcp, = IO.select [@tcp_socket], nil, nil, 0.1
 
-          return unless tcp && tcp.first && !closed_socket?
+        return unless tcp && tcp.first && !closed_socket?
 
-          pack = Packets.structs[:basic_packet].unpack_from_socket(@tcp_socket)
-          type = Packets::STRUCT_MAPS.key(pack[:struct])
-          Supernova.logger.debug { "Recieved packet #{pack}" }
+        pack = Packets.structs[:basic_packet].unpack_from_socket(@tcp_socket)
+        type = Packets::STRUCT_MAPS.key(pack[:struct])
+        Supernova.logger.debug { "Recieved packet #{pack}" }
 
-          if pack[:encrypted] != @crypto_provider.class.crypto_type
-            raise StandardError, "Packet does not match current crypto provider."
-          end
+        if pack[:encrypted] != @crypto_provider.class.crypto_type
+          raise StandardError, "Packet does not match current crypto provider."
+        end
 
-          digest = Digest::SHA1.digest pack[:body]
+        digest = Digest::SHA1.digest pack[:body]
 
-          if pack[:digest] != digest
-            Supernova.logger.error { "The packet's digest does not match the data!" }
-          end
+        if pack[:digest] != digest
+          Supernova.logger.error { "The packet's digest does not match the data!" }
+        end
 
 
-          data = @crypto_provider.decrypt(pack)
-          complete_packet = FastOpenStruct.new Packets.structs[type].unpack(data)
+        data = @crypto_provider.decrypt(pack)
+        complete_packet = FastOpenStruct.new Packets.structs[type].unpack(data)
 
-          handle_packet type, complete_packet, other
+        handle_packet type, complete_packet, other
       end
 
       private

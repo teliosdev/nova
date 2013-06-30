@@ -12,6 +12,10 @@ module Supernova
           "1.0.0"
         end
 
+        def self.encrypt_agreement
+          "plaintext"
+        end
+
         def encrypt(data)
           data[:encrypted] = 3
           data

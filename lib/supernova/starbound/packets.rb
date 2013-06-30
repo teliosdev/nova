@@ -13,10 +13,11 @@ module Supernova
 
       Type = {
         :nul             => 0x00,
-        # 0x01 - 0x0f are for encryption agreement
-        :encrypt_options => 0x01,
-        :rbnacl_encrypt  => 0x02,
-        :openssl_encrypt => 0x03,
+        # 0x01 - 0x0f are for initial connection
+        :version         => 0x01,
+        :encrypt_options => 0x02,
+        :rbnacl_encrypt  => 0x03,
+        :openssl_encrypt => 0x04,
 
         # 0x10 - 0x1f are for basic responses
         :ok              => 0x10,
@@ -31,10 +32,9 @@ module Supernova
         :encrypt_agreement => 0x02
       }
 
-      struct_layout :basic_packet do
+      struct_layout :packet do
         little_endian unsigned size[32]
         unsigned encrypted[8]
-        unsigned struct[8]
         little string nonce[24]
         string digest[20]
         string body[size]

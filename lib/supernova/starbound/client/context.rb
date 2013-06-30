@@ -29,24 +29,6 @@ module Supernova
           @client.send_packet contents, :response
         end
 
-        def available_providers
-          prov = []
-
-          CryptoProvider.providers.each do |p|
-            if p[1].available?
-              prov << [p[0], p[1].version]
-            end
-          end
-
-          pp prov
-
-          prov.sort! do |a, b|
-            CryptoProvider[a[0]].crypto_type <=> CryptoProvider[b[0]].crypto_type
-          end
-
-          prov
-        end
-
       end
     end
   end

@@ -40,12 +40,9 @@ module Supernova
         end
 
         ServerClient.handle :packet => :encrypt_options do |packet|
-          client_encrypts = packet[:body].split("\n")
-          server_encrypts = available_providers.each.map { |x| "#{x[0]} #{x[1]}" }
-          common = client_encrypts & server_encrypts
+          e = EncrpytionAgreement.new
+          provider = e.server_encryption packet[:body]
 
-          encrypt = common.first.split(' ').first.to_sym
-          provider = CryptoProvider[encrypt].new
           provider.private_key!
           client.send_packet({
             :crypt_type => provider.class.crypto_type,

@@ -29,6 +29,10 @@ module Supernova
         @crypto_type
       end
 
+      def self.encrypt_agreement
+        "#{providers.key(self)}/#{version}"
+      end
+
       def initialize
         @options = {}
 

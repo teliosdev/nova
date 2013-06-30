@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   Feed me.
 desc
 
-  s.add_dependency 'cocaine', '~> 0.5'
+  s.add_dependency 'command-runner', '~> 0.4'
   s.add_dependency 'os', '~> 0.9'
   s.add_dependency 'packed_struct'
 
