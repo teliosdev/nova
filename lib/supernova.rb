@@ -1,6 +1,7 @@
 require 'logger'
 
 require 'supernova/version'
+require 'supernova/project'
 require 'supernova/constructor'
 require 'supernova/exceptions'
 require 'supernova/remote'
@@ -31,8 +32,7 @@ module Supernova
   # @yield [] to create the star.
   # @return [Class] the new star.
   def create(options, &block)
-    c = Constructor.new(options, &block).create
-    Star.stars[c.type][c.as] = c
+    Constructor.new(options, &block).modify_or_create
   end
 
   extend self

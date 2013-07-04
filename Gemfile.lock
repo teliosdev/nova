@@ -47,3 +47,4 @@ DEPENDENCIES
   packed_struct
   rbnacl
   rspec
+  thor

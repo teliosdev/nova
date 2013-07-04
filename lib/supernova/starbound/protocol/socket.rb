@@ -53,6 +53,7 @@ module Supernova
         #
         # @return [Packet] the sent packet.
         def write_packet(packet)
+          Supernova.logger.info { "#{packet.data}" }
           new_packet = encryption_provider.encrypt(packet)
 
           socket.write new_packet
@@ -127,6 +128,54 @@ module Supernova
           end
         end
 
+        # Stores callbacks for when packets arrive.
+        #
+        # @param data [Hash<(Symbol, Symbol)>] should consist of only
+        #   one key-value pair, with the key being the struct that
+        #   represents the packet, and the type being the type of
+        #   packet.
+        # @yieldparam packet [Packet] the packet.
+        def on(data, &block)
+          struct = data.keys.first
+          type   = data.values.first
+
+          callbacks[type].push :struct => struct,
+            :type => type, :block => block
+        end
+
+        # The callbacks that have been defined on this protocol.
+        #
+        # @return [Hash<Symbol, Object>] the symbol is the type of
+        #   packet.
+        def callbacks
+          @_callbacks ||= Hash.new { |h, k| h[k] = [] }
+        end
+
+        # Runs a callback.
+        #
+        # @param struct [Symbol] the struct that the callback is for.
+        # @param type [Symbol] the type of callback this is for.
+        # @return [Array<Object>] all of the results from running the
+        #   callbacks.
+        def run_callback(struct, type, *args)
+          Supernova.logger.info { "RUNNING CALLBACK #{struct}/#{type}"}
+          callbacks[type].select { |c|
+            c[:struct] == struct }.map do |c|
+            Supernova.logger.info { "Found callback #{c}" }
+            c[:block].call(*args)
+          end
+        end
+
+        # Keep looping until we stop running.  Reads packets
+        # continuously until we do stop.
+        #
+        # @return [void]
+        def loop
+          while run?
+            read
+          end
+        end
+
         # Finds the response to the given packet.
         #
         # @param packet [Packet]
@@ -153,6 +202,8 @@ module Supernova
           @run = false
 
           socket.close
+
+          super()
         end
 
         private
@@ -172,6 +223,8 @@ module Supernova
 
             packet = encryption_provider.decrypt(
               Packet.from_socket(socket))
+
+            run_callback packet.struct, packet.type, packet
           end
 
           packet
@@ -180,7 +233,7 @@ module Supernova
       end
 
       # The remote closed the connection.
-      class RemoteClosedError < StandardError; end
+      class RemoteClosedError < ProtocolError; end
     end
   end
 end

@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+require 'thor'
 require 'supernova'
 require 'supernova/cli'
 
-opts = Supernova::CLI.parse ARGV
-
-cli = Supernova::CLI.new(opts)
-cli.run
+Supernova::CLI.start

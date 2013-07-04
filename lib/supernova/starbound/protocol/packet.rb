@@ -45,6 +45,9 @@ module Supernova
           # other stuff
           :standard_error     => 0x04,
           :close              => 0x05,
+
+          # content
+          :echo               => 0x06
         }.freeze
 
         # Used internally to check the types of packets when
@@ -56,7 +59,8 @@ module Supernova
 
         # For checking why the protocol was closed.
         CloseReasons = {
-          :none     => 0x00
+          :none     => 0x00,
+          :shutdown => 0x01
         }.freeze
 
         # Provides access to the {Type} constant.
@@ -241,11 +245,11 @@ module Supernova
 
         # Raised when a string is unpacked but it doesn't match any
         # struct defined here.
-        class NoStructError < StandardError; end
+        class NoStructError < ProtocolError; end
 
         # Raised when a packet is sent when another packet was
         # expected.
-        class UnacceptablePacketError < StandardError; end
+        class UnacceptablePacketError < ProtocolError; end
 
       end
     end

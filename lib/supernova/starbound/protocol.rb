@@ -1,3 +1,4 @@
+require 'supernova/starbound/protocol/exceptions'
 require 'supernova/starbound/protocol/encryption'
 require 'supernova/starbound/protocol/messages'
 require 'supernova/starbound/protocol/packet'
@@ -10,6 +11,8 @@ module Supernova
     #
     # @todo More testing.
     class Protocol
+
+      def close; end
 
       include Protocol::Socket
       include Protocol::Encryption
@@ -65,9 +68,14 @@ module Supernova
       # @return [void]
       def close(code = :none)
         @state = :closing
-        send :close, Packet::CloseReasons[code]
+
+        if code
+          send :close, Packet::CloseReasons[code].to_s
+        end
 
         super()
+
+        @state = :offline
       end
 
     end

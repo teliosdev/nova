@@ -1,4 +1,4 @@
-Supernova.create star: :steamcmd do
+Supernova star: :steamcmd do
 
   to :install, on: :posix do |opts|
     # TODO

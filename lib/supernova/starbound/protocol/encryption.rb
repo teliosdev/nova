@@ -47,7 +47,7 @@ module Supernova
       # Raised when the socket isn't using encryption, and we've
       # already finished with the handshake, and if the
       # +:allow_plaintext+ option isn't true.
-      class NoEncryptionError < StandardError; end
+      class NoEncryptionError < ProtocolError; end
     end
   end
 end

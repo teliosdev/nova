@@ -32,6 +32,7 @@ module Supernova
 
       if Star.stars[data[:type]][data[:as]]
         Star.stars[data[:type]][data[:as]].class_exec &@block
+        Star.stars[data[:type]][data[:as]]
       else
         new_star = Class.new(star_type)
         new_star.as   = data[:as]

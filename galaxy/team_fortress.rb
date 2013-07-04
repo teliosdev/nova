@@ -1,4 +1,4 @@
-Supernova.create star: :team_fortress do
+Supernova star: :team_fortress do
 
   #require_star :steamcmd
 

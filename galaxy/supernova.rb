@@ -1,4 +1,4 @@
-Supernova.create :star => :supernova, :requires => [:posix] do
+Supernova :star => :supernova, :requires => [:posix] do
   on :install_stars, :requires => [:git_repo] do |opts|
     Dir.mkdir(Dir.home + "./galaxy") rescue nil
 

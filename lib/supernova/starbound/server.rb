@@ -1,3 +1,5 @@
+require 'socket'
+
 module Supernova
   module Starbound
 
@@ -6,10 +8,29 @@ module Supernova
     # @todo Default proc.
     class Server
 
+      # The default block for listening to connections.
+      #
+      # @return [Proc]
+      def self.for_client(&block)
+        if block_given?
+          @block = block
+        else
+          @block ||= proc {}
+        end
+      end
+
       # The options passed to the server on initialization.
       #
       # @return [Hash]
       attr_reader :options
+
+      # The default options.
+      DEFAULT_OPTIONS = {
+        :type  => :tcp,
+        :host  => "127.0.0.1",
+        :port  => 2010,
+        :path  => "/tmp/sock"
+      }
 
       # Whether or not to run.  Once this is set to false, the server
       # stops listening for clients.
@@ -36,7 +57,7 @@ module Supernova
       # @option options [String] :path the path to the unix socket.
       #   Only used if +:type+ is +:unix+.
       def initialize(options = {})
-        @options = options
+        @options = DEFAULT_OPTIONS.merge options
         @protocol_options = (options.delete(:protocol) || {}).dup
         @run = true
         @thread_list = []
@@ -49,10 +70,12 @@ module Supernova
       # @yieldparam protocol [Protocol] the protocol instance that is
       #   used for the client.
       def listen(&block)
-        block ||= proc {}
+        block ||= self.class.for_client
+        Supernova.logger.info { "Server started." }
         while run
-          server.listen(5)
+          next unless IO.select [server], nil, nil, 1
           thread_list << Thread.start(server.accept) do |client|
+            Supernova.logger.info { "Client accepted." }
             begin
               protocol = Protocol.new(
                 @protocol_options.merge(:type => :server))
@@ -63,11 +86,34 @@ module Supernova
               protocol.handshake
 
               block.call(protocol)
-            rescue StandardError => e
+            rescue ExitError => e
+              Supernova.logger.error { "Closing while client is connected.  Notifying..." }
+              if protocol
+                protocol.close(:shutdown)
+              else
+                client.close unless client.closed?
+              end
+            rescue RemoteCloseError
+            rescue ProtocolError => e
               Supernova.logger.error { "Client failed: #{e.message} #{e.backtrace.join("\n")}" }
               client.close unless client.closed?
             end
+
+            thread_list.delete(Thread.current)
+            Supernova.logger.info { "Client disconnected." }
+            protocol.close(false)
           end
+        end
+      end
+
+      # Shuts down the server.
+      #
+      # @return [void]
+      def shutdown
+        puts "shutting down"
+        @run = false
+        thread_list.each do |thread|
+          thread.raise ExitError
         end
       end
 

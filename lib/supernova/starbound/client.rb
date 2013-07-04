@@ -1,3 +1,5 @@
+require 'socket'
+
 module Supernova
   module Starbound
 
@@ -8,6 +10,11 @@ module Supernova
       #
       # @return [Hash]
       attr_reader :options
+
+      # The underlying protocol that powers this client.
+      #
+      # @return [Protocol]
+      attr_reader :protocol
 
       # The default options when dealing with this class.
       DEFAULT_OPTIONS = {
