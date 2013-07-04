@@ -19,24 +19,40 @@ module Supernova
       @block = block
     end
 
-    # Creates a star.  If it cannot find the correct star type, raises
-    # {NoStarError}.  Returns the new star class.
+    # Modifies an already existing star if it exists, or creates it
+    # if it doesn't.
     #
     # @raise [NoStarError] when the star type couldn't be found.
     # @return [Class] a subclass of the star type.
-    def create
-
-      star_type = Star.types[@options.keys.first]
+    def modify_or_create
+      star_type = Star.types[data[:type]]
 
       raise NoStarError,
-        "Could not find star type #{@options.keys.first}." unless star_type
+        "Could not find star type #{data[:type]}." unless star_type
 
-      new_star = Class.new(star_type)
-      new_star.as   = @options.values.first
-      new_star.type = @options.keys.first
-      new_star.class_exec &@block
-      new_star.required_platforms = [@options[:requires]].flatten.compact
-      new_star
+      if Star.stars[data[:type]][data[:as]]
+        Star.stars[data[:type]][data[:as]].class_exec &@block
+      else
+        new_star = Class.new(star_type)
+        new_star.as   = data[:as]
+        new_star.type = data[:type]
+        new_star.class_exec &@block
+
+        new_star.required_platforms = data[:required_platforms]
+        Star.stars[data[:type]][data[:as]] = new_star
+      end
+    end
+
+    # Returns information about the star, like the type, the required
+    # platforms, and what it's named.
+    #
+    # @return [Hash<Symbol, Object>]
+    def data
+      @_data ||= {
+        :as   => @options.values.first,
+        :type => @options.keys.first,
+        :required_platforms => [@options[:requires]].flatten.compact
+      }
     end
 
   end

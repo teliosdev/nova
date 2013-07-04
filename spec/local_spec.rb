@@ -16,7 +16,7 @@ describe Supernova::Remote::Local do
   context "commands" do
     it "should execute the command" do
       star = Supernova::Star.new
-      star.line("echo", "hello").run.should eq("hello\n")
+      star.line("echo", "hello").pass.stdout.should eq("hello\n")
     end
   end
 end

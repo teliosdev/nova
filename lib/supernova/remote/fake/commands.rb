@@ -11,9 +11,10 @@ module Supernova
         # Creates a CommandLine with its default Runner (most likely
         # the POSIX spawner).
         #
-        # @see Fake::Commands#line
-        # @param (see Fake::Commands#line)
-        # @return (see Fake::Commands#line)
+        # @param command [String] the command to run.
+        # @param arguments [String] the arguments to be passed to the
+        #   command.
+        # @return [Command::Runner] the runner.
         def line(command, arguments, options = {})
           options.merge! logger: Supernova.logger
           c = Command::Runner.new(command, arguments, options)
@@ -24,9 +25,9 @@ module Supernova
 
         # Executes a command with the given arguments.
         #
-        # @see Fake::Commands#exec
-        # @param (see Fake::Commands#exec)
-        # @return (see Fake::Commands#exec)
+        # @param (see Fake::Commands#line)
+        # @return [Command::Runner::Message] the data about the
+        #   command that ran.
         def exec(command, arguments, interops = {}, options = {})
           line(command, arguments, options).pass(interops)
         end

@@ -53,7 +53,7 @@ module Supernova
 
           # Marks this feature as fake.  This is not reversable.
           #
-          # @see [#fake?]
+          # @see #fake?
           # @return [self]
           def fake!
             @fake = true

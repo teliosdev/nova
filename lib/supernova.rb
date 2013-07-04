@@ -6,6 +6,8 @@ require 'supernova/exceptions'
 require 'supernova/remote'
 require 'supernova/star'
 
+require 'supernova/starbound'
+
 # A Game management software.
 #
 # @api public
@@ -20,10 +22,12 @@ module Supernova
 
   attr_writer :logger
 
-  # This creates a star with a given block.
+  # This creates a star with a given block, unless it already exists;
+  # if it does, it just modifies that star.
   #
-  # @param options [Hash{Symbol => Symbol}] it should contain a single
-  #   key-value pair.  Any others will be ignored.
+  # @param options [Hash{Symbol => Symbol}] the first key value pair
+  #   is used to determine the star type and star name, while the
+  #   rest is ignored unless it's +:required_platforms+.
   # @yield [] to create the star.
   # @return [Class] the new star.
   def create(options, &block)
@@ -32,4 +36,9 @@ module Supernova
   end
 
   extend self
+end
+
+# see Supernova.create
+def Supernova(options, &block)
+  Supernova.create(options, &block)
 end

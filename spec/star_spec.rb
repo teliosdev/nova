@@ -117,8 +117,7 @@ describe Supernova::Star do
   context "commands" do
     it "gives a command line" do
       star = SomeType.new
-      star.line("something", "arguments").should be_instance_of Cocaine::CommandLine
-      star.line("something", "arguments").instance_variable_get(:@logger).should be Supernova.logger
+      star.line("something", "arguments").should be_instance_of Command::Runner
     end
   end
 end
