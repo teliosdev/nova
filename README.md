@@ -1,4 +1,4 @@
-# Supernova [![Build Status](https://travis-ci.org/redjazz96/supernova.png?branch=master)](https://travis-ci.org/redjazz96/supernova)
+# Supernova [![Build Status](https://travis-ci.org/redjazz96/supernova.png?branch=master)](https://travis-ci.org/redjazz96/supernova) [![Code Climate](https://codeclimate.com/github/redjazz96/supernova.png)](https://codeclimate.com/github/redjazz96/supernova)
 
 ![A Very Pretty Supernova](http://www.nasa.gov/centers/goddard/images/content/280046main_CassAcomposite_HI.jpg)
 
