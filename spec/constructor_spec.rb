@@ -4,14 +4,14 @@ describe Supernova::Constructor do
     d = described_class.new(non_existant_star: :some_name) {}
 
     expect {
-      d.create
+      d.modify_or_create
     }.to raise_error(Supernova::NoStarError)
 
     d = described_class.new(star: :some_name) do
       def some_method; 5; end
     end
 
-    klass = d.create
+    klass = d.modify_or_create
     klass.as.should be :some_name
     klass.instance_methods.should include(:some_method)
     klass.new.some_method.should be 5

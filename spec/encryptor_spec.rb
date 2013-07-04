@@ -6,7 +6,7 @@ describe Supernova::Starbound::Encryptor do
 
   it "all responds to a normal api" do
     described_class.encryptors.each do |enc|
-      sub = enc.new
+      sub = enc.new if enc.available?
 
       [:encrypt, :decrypt, :private_key!, :public_key,
         :other_public_key].each do |m|
