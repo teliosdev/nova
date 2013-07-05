@@ -12,8 +12,6 @@ module Supernova
     # @todo More testing.
     class Protocol
 
-      def close; end
-
       include Protocol::Socket
       include Protocol::Encryption
       include Protocol::Messages

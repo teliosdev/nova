@@ -53,18 +53,9 @@ module Supernova
           response = response_to sent
           response.expect(:public_key)
 
-          parts = response.body.split("\n")
+          encryptor = matching_encryptor *response.body.split("\n", 2)
 
-          name = parts.shift
-          body = parts.join("\n")
-
-          enc = Encryptor.encryptors.select { |e|
-            e.encryptor_name == name
-          }.first.new
-          enc.private_key!
-          enc.other_public_key = body
-
-          respond_to response, :public_key, enc.public_key
+          respond_to response, :public_key, encryptor.public_key
           self.encryption_provider = enc
         end
 
@@ -103,6 +94,21 @@ module Supernova
           self.encryption_provider = encryptor
         end
 
+        private
+
+        # Handles selecting and setting up the encryption for this
+        # protocol, given the name from the remote.
+        #
+        # @return [Encryptor]
+        def matching_encryptor(name, body)
+          enc = Encryptor.encryptors.select { |e|
+            e.encryptor_name == name
+          }.first.new
+          enc.private_key!
+          enc.other_public_key = body
+
+          enc
+        end
       end
 
       # Raised when a remote that connects is incompatible (such that

@@ -31,18 +31,12 @@ module Supernova
         "Could not find star type #{data[:type]}." unless star_type
 
       if Star.stars[data[:type]][data[:as]]
-        Star.stars[data[:type]][data[:as]].class_exec &@block
-        Star.stars[data[:type]][data[:as]]
+        handle_existing
       else
-        new_star = Class.new(star_type)
-        new_star.as   = data[:as]
-        new_star.type = data[:type]
-        new_star.class_exec &@block
-
-        new_star.required_platforms = data[:required_platforms]
-        Star.stars[data[:type]][data[:as]] = new_star
+        handle_new star_type
       end
     end
+
 
     # Returns information about the star, like the type, the required
     # platforms, and what it's named.
@@ -54,6 +48,39 @@ module Supernova
         :type => @options.keys.first,
         :required_platforms => [@options[:requires]].flatten.compact
       }
+    end
+
+    private
+
+    # Handles an existing star.  Executes the block in the instance of
+    # the star, adds the definition's required_platforms to the stars,
+    # and then returns the star.
+    #
+    # @return [Class]
+    def handle_existing
+      star = Star.stars[data[:type]][data[:as]]
+
+      star.class_exec &@block
+      star.required_platforms.push(*data[:required_platforms])
+
+      star
+    end
+
+    # Handles defining a new star.  Creates a class as a subclass of
+    # the star, sets its name and type, and executes the block in the
+    # instance of the star.  Adds the required_platform to the star,
+    # sets the star to {Star.stars}, and returns the new star.
+    #
+    # @param star_type [Class] the type of star it is.
+    # @return [Class]
+    def handle_new(star_type)
+      new_star = Class.new(star_type)
+      new_star.as   = data[:as]
+      new_star.type = data[:type]
+      new_star.class_exec &@block
+
+      new_star.required_platforms = data[:required_platforms]
+      Star.stars[data[:type]][data[:as]] = new_star
     end
 
   end

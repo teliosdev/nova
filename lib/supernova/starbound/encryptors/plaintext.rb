@@ -8,6 +8,9 @@ module Supernova
         encryptor_name "plaintext"
         register! 0
 
+        # The random provider for this clas.
+        RANDOM = Random.new
+
         # Whether or not this encryptor is available.  Since it's
         # plaintext, it's always available.
         #
@@ -28,7 +31,7 @@ module Supernova
         def encrypt(packet)
           packet = packet.clone
 
-          packet[:nonce] = Random::DEFAULT.bytes(24)
+          packet[:nonce] = RANDOM.bytes(24)
           packet
         end
 
@@ -36,7 +39,7 @@ module Supernova
         def decrypt(packet)
           packet = packet.clone
 
-          packet[:nonce] = Random::DEFAULT.bytes(24)
+          packet[:nonce] = RANDOM.bytes(24)
           packet
         end
 

@@ -8,17 +8,6 @@ module Supernova
     # @todo Default proc.
     class Server
 
-      # The default block for listening to connections.
-      #
-      # @return [Proc]
-      def self.for_client(&block)
-        if block_given?
-          @block = block
-        else
-          @block ||= proc {}
-        end
-      end
-
       # The options passed to the server on initialization.
       #
       # @return [Hash]
@@ -61,47 +50,49 @@ module Supernova
         @protocol_options = (options.delete(:protocol) || {}).dup
         @run = true
         @thread_list = []
-        @protocols = []
       end
 
-      # Listen for clients.  Uses the given block to yield to when a
-      # client is found.
+      # How to handle the client.  Accepts a block, which is used in
+      # {#listen} when a client connects.  If no block is given, the
+      # a block is returned.
       #
       # @yieldparam protocol [Protocol] the protocol instance that is
-      #   used for the client.
-      def listen(&block)
-        block ||= self.class.for_client
+      #   used to handle the client.  By the time it is yielded, the
+      #   client has already done a handshake with the server.
+      # @return [Proc]
+      def with_client(&block)
+        if block_given?
+          @with_client = block
+        else
+          @with_client ||= proc {}
+        end
+      end
+
+      # Reads a ruby file in the instance of this server, so that it
+      # can build a {#with_client} block for it.
+      #
+      # @param file [String] the file to read from.
+      def read_client_file(file)
+        return unless file && File.exists?(file)
+
+        instance_eval File.open(file, "r").read, file, 1
+      end
+
+      # Listen for clients.  Calls {#handle_client} when a client is
+      # found.
+      #
+      # @return [void]
+      def listen
         Supernova.logger.info { "Server started." }
         while run
           next unless IO.select [server], nil, nil, 1
           thread_list << Thread.start(server.accept) do |client|
             Supernova.logger.info { "Client accepted." }
-            begin
-              protocol = Protocol.new(
-                @protocol_options.merge(:type => :server))
 
-              @protocols << protocol
-
-              protocol.socket = client
-              protocol.handshake
-
-              block.call(protocol)
-            rescue ExitError => e
-              Supernova.logger.error { "Closing while client is connected.  Notifying..." }
-              if protocol
-                protocol.close(:shutdown)
-              else
-                client.close unless client.closed?
-              end
-            rescue RemoteCloseError
-            rescue ProtocolError => e
-              Supernova.logger.error { "Client failed: #{e.message} #{e.backtrace.join("\n")}" }
-              client.close unless client.closed?
-            end
+            handle_client client
 
             thread_list.delete(Thread.current)
             Supernova.logger.info { "Client disconnected." }
-            protocol.close(false)
           end
         end
       end
@@ -131,6 +122,40 @@ module Supernova
         when :pipe
           FakeServer.new options.fetch(:pipe)
         end
+      end
+
+      private
+
+      # Handles a client after they connect. Creates a {Protocol},
+      # initiates the handshake, and calls {#with_client} to handle
+      # the protocol afterwards.
+      #
+      # @param client [IO] the client to handle.
+      # @return [void]
+      def handle_client(client)
+      protocol = Protocol.new(
+        @protocol_options.merge(:type => :server))
+
+      protocol.socket = client
+      protocol.handshake
+
+      with_client.call(protocol)
+
+      protocol.close(false)
+
+      rescue ExitError => e
+        Supernova.logger.error { "Closing while client is connected.  Notifying..." }
+        if protocol
+          protocol.close(:shutdown)
+        else
+          client.close unless client.closed?
+        end
+      rescue RemoteCloseError
+      rescue ProtocolError => e
+        Supernova.logger.error { "Client failed: #{e.message} #{e.backtrace.join("\n")}" }
+        client.close unless client.closed?
+      ensure
+        protocol.close(false)
       end
 
       # A fake server that wraps a pipe.

@@ -53,7 +53,6 @@ module Supernova
         #
         # @return [Packet] the sent packet.
         def write_packet(packet)
-          Supernova.logger.info { "#{packet.data}" }
           new_packet = encryption_provider.encrypt(packet)
 
           socket.write new_packet
@@ -158,10 +157,8 @@ module Supernova
         # @return [Array<Object>] all of the results from running the
         #   callbacks.
         def run_callback(struct, type, *args)
-          Supernova.logger.info { "RUNNING CALLBACK #{struct}/#{type}"}
           callbacks[type].select { |c|
             c[:struct] == struct }.map do |c|
-            Supernova.logger.info { "Found callback #{c}" }
             c[:block].call(*args)
           end
         end
@@ -202,8 +199,6 @@ module Supernova
           @run = false
 
           socket.close
-
-          super()
         end
 
         private

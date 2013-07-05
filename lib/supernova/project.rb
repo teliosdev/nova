@@ -87,9 +87,8 @@ module Supernova
     #   all of them.
     # @return [void]
     def run_servers(do_fork = true, which = [])
-      each_server do |server, name|
+      each_server(which) do |server, name|
         puts name
-        next unless which.empty? or which.include?(name)
 
         if File.exists?(server[:files][:pid])
           Supernova.logger.warn {
@@ -107,21 +106,7 @@ module Supernova
           File.open(server[:files][:pid], "w") { |f| f.write process_id }
           Process.detach(process_id)
         else
-          if do_fork
-            Supernova.logger = Logger.new(server[:files][:log], 10, 1_024_000)
-            $stdin = $stdout = $stderr = File.open("/dev/null", "a")
-          end
-
-          if server[:files][:client]
-            require server[:files][:client]
-          end
-
-          s = Supernova::Starbound::Server.new(server)
-          trap('INT') {
-            s.shutdown
-            File.delete(server[:files][:pid]) rescue Errno::ENOENT
-          }
-          return s.listen
+          return build_server(server, do_fork)
         end
       end
     end
@@ -132,12 +117,7 @@ module Supernova
     #   Defaults to all of them.
     # @return [void]
     def shoot(which = [])
-      puts "Shooting..."
       each_server do |server, name|
-        next unless which.empty? or which.include?(name)
-
-        p server
-
         if File.exists?(server[:files][:pid])
           pid = File.open(server[:files][:pid], "r") { |f| f.read }.to_i
 
@@ -146,6 +126,8 @@ module Supernova
           Process.kill :INT, pid rescue Errno::ESRCH
 
           File.delete(server[:files][:pid]) rescue Errno::ENOENT
+
+          puts "OK!"
         end
       end
     end
@@ -160,7 +142,7 @@ module Supernova
     # @yieldparam index [Numeric] the index of the server in the
     #   definition file.
     # @return [void]
-    def each_server
+    def each_server(only = [])
       server_list = [options["servers"], options["server"]].flatten.compact
 
       server_list.each_with_index do |srv, i|
@@ -176,7 +158,40 @@ module Supernova
         end
         srv[:files] = files
 
+        next unless only.empty? or only.include?(srv_name)
+
         yield srv, srv_name, i
+      end
+    end
+
+    # Creates a server, with the given server options.
+    #
+    # @param server [Hash<Symbol, Object>] the server information to
+    #   base the server instance off of.
+    # @param redirect [Boolean] whether or not to redirect the
+    #   {Supernova.logger} and the stdin, stdout, and stderr for the
+    #   server.
+    # @return [void]
+    def build_server(server, redirect = true)
+      if redirect
+        Supernova.logger = Logger.new(server[:files][:log], 10, 1_024_000)
+        $stdin = $stdout = $stderr = File.open("/dev/null", "a")
+      end
+
+      begin
+        s = Supernova::Starbound::Server.new(server)
+        s.read_client_file server[:files][:client]
+
+        trap :INT do
+          s.shutdown
+          File.delete(server[:files][:pid]) rescue Errno::ENOENT
+        end
+
+        return s.listen
+      rescue => e
+        Supernova.logger.fatal { "#{e}: #{e.message}; #{e.backtrace[0]}" }
+        File.delete(server[:files][:pid]) rescue Errno::ENOENT
+        exit
       end
     end
 
