@@ -4,7 +4,7 @@
 
 ## What is supernova?
 Supernova is a way to set up software on computers in a definite and consistant process.
-Itss primary goals are to be cross-platform compatible, easy to use and understand, and
+Its goals are to be cross-platform compatible, easy to use and understand, and
 powerful.
 
 ## Great! How do I get started?
