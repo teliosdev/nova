@@ -9,7 +9,9 @@ require 'supernova/star'
 
 require 'supernova/starbound'
 
-# A Game management software.
+# A Game management software.  Also note that a method named
+# +Supernova+ is available under the top-level namespace, which acts
+# as an alias for {Supernova.create}.
 #
 # @api public
 module Supernova
@@ -38,7 +40,12 @@ module Supernova
   extend self
 end
 
-# see Supernova.create
+# Creates or modifies a star, with the given options and block.
+#
+# @see Supernova.create
+# @param (see Supernova.create)
+# @yield (see Supernova.create)
+# @return [Class] the new star.
 def Supernova(options, &block)
   Supernova.create(options, &block)
 end

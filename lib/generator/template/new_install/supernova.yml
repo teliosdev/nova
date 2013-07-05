@@ -1,7 +1,7 @@
 load_paths:
   - ./galaxy
 
-# If this is an array, every time we run +supernova create+, multiple
+# If this is an array, every time we run +supernova server up+, multiple
 # instances are created, each matching the values here.
 servers:
   - :name: tcp_server

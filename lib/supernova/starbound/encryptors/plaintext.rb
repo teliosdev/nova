@@ -24,7 +24,7 @@ module Supernova
           true
         end
 
-        # see Encryptor#encrypt
+        # (see Encryptor#encrypt)
         def encrypt(packet)
           packet = packet.clone
 
@@ -32,7 +32,7 @@ module Supernova
           packet
         end
 
-        # see Encryptor#decrypt
+        # (see Encryptor#decrypt)
         def decrypt(packet)
           packet = packet.clone
 

@@ -30,7 +30,7 @@ module Supernova
           end
         end
 
-        # see Encryptor#encrypt
+        # (see Encryptor#encrypt)
         def encrypt(packet)
           packet = packet.clone
           cipher = ::OpenSSL::Cipher::AES256.new(:CBC)
@@ -45,7 +45,7 @@ module Supernova
           packet
         end
 
-        # see Encryptor#decrypt
+        # (see Encryptor#decrypt)
         def decrypt(packet)
           packet = packet.clone
           decipher = ::OpenSSL::Cipher::AES256.new(:CBC)
@@ -64,7 +64,7 @@ module Supernova
           packet
         end
 
-        # see Encryptor#private_key!
+        # (see Encryptor#private_key!)
         def private_key!
           options[:private] = ::OpenSSL::PKey::RSA.new(KEY_SIZE)
         end

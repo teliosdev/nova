@@ -3,6 +3,8 @@ require 'packed_struct'
 module Supernova
   module Starbound
     class Protocol
+
+      # Handles serialization and deserialization of packets.
       class Packet
 
         extend PackedStruct
@@ -70,16 +72,12 @@ module Supernova
           Type
         end
 
-        # Builds a packet from a given body.  Keeps track of
-        # the packet number, incrementing it if the third argument is
-        # true.
+        # Builds a packet from a given body.
         #
         # @param type [Symbol] the type of packet it is.  See {Type}.
         # @param body [String] the body of the packet.
         # @param others [Hash] the data to pass to the struct.  See
         #   the packet struct definition to see what keys are allowed.
-        # @param increment_id [Boolean] whether or not to increment
-        #   packet id.  Defaults to true.
         # @return [Packet] the packet data.
         def self.build(type, body, others = {})
           packet_data = {

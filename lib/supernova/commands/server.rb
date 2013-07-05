@@ -1,5 +1,7 @@
 module Supernova
   module Commands
+
+    # Handles server operations for projects.
     class Server < ::Thor
 
       desc "up", "Runs the servers."
@@ -41,6 +43,12 @@ module Supernova
                     exception if the  protocol negotiates a plaintext
                     encryption (insecure).
       DESC
+      # Runs the servers.  Run +supernova server help up+ for
+      # information on this command.
+      #
+      # @see Project
+      # @see Project#run_servers
+      # @return [void]
       def up
         Project.new(parent_options[:path]).run_servers(
           !options[:foreground], options[:which])
@@ -50,6 +58,11 @@ module Supernova
       method_option :which , :type => :array, :banner => "<servers>",
         :desc => "Which servers to remove.  Empty means all.",
         :default => []
+      # Handles taking down servers.
+      #
+      # @see Project
+      # @see Project#shoot
+      # @return [void]
       def down
         Project.new(parent_options[:path]).shoot(options[:which])
       end

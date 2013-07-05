@@ -98,13 +98,11 @@ module Supernova
       # @!method encrypt(packet)
       #   Encrypts the given packet with the encryptor.
       #
-      #   @abstract
       #   @param packet [Packet] the packet to encrypt.
       #   @return [Packet] the encrypted packet.
       # @!method decrypt(packet)
       #   Decrypts the given packet with the encryptor.
       #
-      #   @abstract
       #   @param packet [Packet] the packet to decrypt.
       #   @return [Packet] the decrypted packet.
       # @!method private_key!

@@ -8,7 +8,7 @@ module Supernova
         encryptor_name "rbnacl/1.0.0"
         register! 2
 
-        # see Encryptor.available?
+        # (see Encryptor.available?)
         def self.available?
           begin
             require 'rbnacl'
@@ -18,7 +18,7 @@ module Supernova
           end
         end
 
-        # see Encryptor#encrypt
+        # (see Encryptor#encrypt)
         def encrypt(packet)
           packet = packet.clone
           packet[:nonce] = Crypto::Random.random_bytes(24)
@@ -29,7 +29,7 @@ module Supernova
           packet
         end
 
-        # see Encryptor#decrypt
+        # (see Encryptor#decrypt)
         def decrypt(packet)
           packet = packet.clone
           box = Crypto::Box.new(options[:public_key], options[:private_key])
