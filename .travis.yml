@@ -10,8 +10,8 @@ script: "rspec spec"
 before_install:
   - wget http://download.libsodium.org/libsodium/releases/libsodium-0.4.tar.gz -O libsodium.tar.gz
   - tar xf libsodium.tar.gz
-  -"cd libsodium-0.4 && ./configure --prefix $PWD/lib"
+  - "cd libsodium-0.4 && ./configure --prefix $PWD/lib"
   - make -C ./libsodium-0.4
   - make -C ./libsodium-0.4 install
 
-env: LD_LIBRARY_PATH=$PWD/libsodium-0.4/out/lib
+env: "LD_LIBRARY_PATH=$PWD/libsodium-0.4/out/lib"
