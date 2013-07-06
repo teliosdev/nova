@@ -8,6 +8,15 @@ describe Supernova::Starbound::Encryptor do
     }.to raise_error NotImplementedError
   end
 
+  it "is not plaintext" do
+    described_class.should_not be_plaintext
+  end
+
+  it "sorts the encryptors" do
+    described_class.sorted_encryptors.should have(3).items
+    described_class.sorted_encryptors.first.preference.should be_greater_than described_class.sorted_encryptors.last.preference
+  end
+
   context "encrypting" do
     before(:each) { described_class.stub(:available?).and_return(true) }
 
