@@ -128,7 +128,6 @@ module Supernova
           def initialize(remote = nil)
             @remote = remote || self.remote
             diff = (self.class.required_platforms || []) - platform
-            p platform
             raise NoPlatformError,
               "Requires any of #{diff.join(', ')} to run on." unless diff.length == 0
 

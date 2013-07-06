@@ -176,7 +176,7 @@ module Supernova
         #
         # @return [String]
         def inspect
-          "#<#{self.class.name}:#{@struct}:#{@data.hash}>"
+          "#<#{self.class.name}:#{@struct}:#{@data}>"
         end
 
         # Forwards to the data key :packet_id, or if that doesn't
@@ -215,6 +215,15 @@ module Supernova
           end
         end
 
+        # Copies the data over to the new packet.  This is used when
+        # #clone or #dup is copied on the instance.
+        #
+        # @api private
+        # @return [void]
+        def initialize_copy(other)
+          other.data = self.data.clone
+        end
+
         # Forwards requests on this packet of unkown methds to the
         # data hash.
         #
@@ -241,13 +250,16 @@ module Supernova
           @data.respond_to?(method, include_all) || @data.key?(method)
         end
 
-        # Raised when a string is unpacked but it doesn't match any
-        # struct defined here.
-        class NoStructError < ProtocolError; end
+        protected
 
-        # Raised when a packet is sent when another packet was
-        # expected.
-        class UnacceptablePacketError < ProtocolError; end
+        # Sets the data to the given argument.
+        #
+        # @api private
+        # @param data [Hash] the data to set to.
+        # @return [void]
+        def data=(data)
+          @data = data
+        end
 
       end
     end

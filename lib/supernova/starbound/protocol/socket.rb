@@ -226,9 +226,6 @@ module Supernova
         end
 
       end
-
-      # The remote closed the connection.
-      class RemoteClosedError < ProtocolError; end
     end
   end
 end

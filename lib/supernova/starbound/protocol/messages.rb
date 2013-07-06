@@ -111,9 +111,6 @@ module Supernova
         end
       end
 
-      # Raised when a remote that connects is incompatible (such that
-      # its major version is different than our major version).
-      class IncompatibleRemoteError < ProtocolError; end
     end
   end
 end

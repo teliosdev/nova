@@ -1,4 +1,4 @@
-require 'digest/sha2'
+ require 'digest/sha2'
 
 module Supernova
   module Starbound
@@ -40,8 +40,9 @@ module Supernova
           # we have to fit the packet's nonce size.
           packet[:nonce] = cipher.iv = ::OpenSSL::Random.random_bytes(24)
 
-          packet.body = hmac_digest(packet[:body]) +
-            cipher.update(packet[:body]) + cipher.final
+          encrypted = cipher.update(packet[:body]) + cipher.final
+
+          packet.body = hmac_digest(encrypted) + encrypted
           packet
         end
 
@@ -60,13 +61,14 @@ module Supernova
             raise InvalidDigestError
           end
 
-          packet.body = decipher.update(actual_body) + decipher.final
+          packet.body = decipher.update(actual_body) +
+            decipher.final
           packet
         end
 
         # (see Encryptor#private_key!)
         def private_key!
-          options[:private] = ::OpenSSL::PKey::RSA.new(KEY_SIZE)
+          options[:private] = ::OpenSSL::PKey::RSA.new(RSA_KEY_SIZE)
         end
 
         # If we have already recieved the other public key, we'll
@@ -110,12 +112,9 @@ module Supernova
         #
         # @return [String]
         def hmac_digest(body)
-          ::OpenSSL::HMAC.digest(Digest::SHA2.new(512),
-            options[:shared_secret], body)
+          ::OpenSSL::HMAC.digest(::OpenSSL::Digest::SHA512.new,
+            options[:shared_secret], body.to_s)
         end
-
-        # Raised if the given digest does not match the packet.
-        class InvalidDigestError < StandardError; end
 
       end
     end
