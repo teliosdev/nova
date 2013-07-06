@@ -22,7 +22,7 @@ module Supernova
 
         # see Encryptor.available?
         def self.available?
-          begin
+          @_available ||= begin
             require 'openssl'
             true
           rescue LoadError

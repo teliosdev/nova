@@ -15,7 +15,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
   end
 
   before :each do
-    @packet = Supernova::Starbound::Protocol::Packet.build(0, "hello world")
+    @packet = SupernovaHelper.build_packet
   end
 
   it "encrypts a packet successfully" do

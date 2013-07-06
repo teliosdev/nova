@@ -14,7 +14,7 @@ describe Supernova::Starbound::Encryptor do
 
   it "sorts the encryptors" do
     described_class.sorted_encryptors.should have(3).items
-    described_class.sorted_encryptors.first.preference.should be_greater_than described_class.sorted_encryptors.last.preference
+    described_class.sorted_encryptors.first.preference.should > described_class.sorted_encryptors.last.preference
   end
 
   context "encrypting" do

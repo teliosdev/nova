@@ -10,7 +10,7 @@ module Supernova
 
         # (see Encryptor.available?)
         def self.available?
-          begin
+          @_available ||= begin
             require 'rbnacl'
             true
           rescue LoadError
