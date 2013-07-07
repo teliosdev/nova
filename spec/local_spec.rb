@@ -9,14 +9,14 @@ describe Supernova::Remote::Local do
   context "platforms" do
 
     it "should determine platforms" do
-      Supernova::Star.new.platform.should have_at_least(3).items
+      expect(Supernova::Star.new.platform).to have_at_least(3).items
     end
   end
 
   context "commands" do
     it "should execute the command" do
       star = Supernova::Star.new
-      star.line("echo", "hello").pass.stdout.should eq("hello\n")
+      expect(star.line("echo", "hello").pass.stdout).to eq("hello\n")
     end
   end
 end

@@ -16,6 +16,4 @@ module SupernovaHelper
     Supernova::Starbound::Protocol::Packet.build_response(type, body, pack, :nonce => "")
   end
 
-
-
 end

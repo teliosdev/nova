@@ -1,7 +1,7 @@
 describe Supernova::Starbound::Encryptors::RbNaCl do
 
   it "is available" do
-    described_class.should be_available
+    expect(described_class).to be_available
   end
 
   context "handling keys" do
@@ -10,7 +10,7 @@ describe Supernova::Starbound::Encryptors::RbNaCl do
 
     it "has a public key" do
       subject.private_key! # initialize the private key
-      subject.public_key.should be_a String
+      expect(subject.public_key).to be_a String
     end
   end
 
@@ -31,8 +31,8 @@ describe Supernova::Starbound::Encryptors::RbNaCl do
       encrypted = subject.encrypt(@packet)
     }.to_not raise_error
 
-    encrypted.should be_instance_of Supernova::Starbound::Protocol::Packet
-    encrypted.body.bytesize.should eq encrypted[:size]
+    expect(encrypted).to be_instance_of Supernova::Starbound::Protocol::Packet
+    expect(encrypted.body.bytesize).to eq encrypted[:size]
   end
 
   it "decrypts a packet successfully" do
@@ -51,7 +51,7 @@ describe Supernova::Starbound::Encryptors::RbNaCl do
       decrypted = box.decrypt(encrypted[:nonce], encrypted[:body])
     }.to_not raise_error
 
-    decrypted.should eq @packet.body
+    expect(decrypted).to eq @packet.body
   end
 
   it "raises an error on non-matching hashes" do

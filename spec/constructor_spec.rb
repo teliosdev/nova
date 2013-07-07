@@ -12,9 +12,9 @@ describe Supernova::Constructor do
     end
 
     klass = d.modify_or_create
-    klass.as.should be :some_name
-    klass.instance_methods.should include(:some_method)
-    klass.new.some_method.should be 5
+    expect(klass.as).to be :some_name
+    expect(klass.instance_methods).to include(:some_method)
+    expect(klass.new.some_method).to be 5
   end
 
 end

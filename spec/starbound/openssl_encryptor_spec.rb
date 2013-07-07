@@ -1,7 +1,7 @@
 describe Supernova::Starbound::Encryptors::OpenSSL do
 
   it "is available" do
-    described_class.should be_available
+    expect(described_class).to be_available
   end
 
   context "handling keys" do
@@ -10,7 +10,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
 
     it "has a public key" do
       subject.private_key! # initialize the private key
-      subject.public_key.should be_a String
+      expect(subject.public_key).to be_a String
     end
   end
 
@@ -28,15 +28,15 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
 
     subject.other_public_key = encrypted_secret
 
-    subject.options[:shared_secret].should eq secret
+    expect(subject.options[:shared_secret]).to eq secret
     encrypted = nil
 
     expect {
       encrypted = subject.encrypt(@packet)
     }.to_not raise_error
 
-    encrypted.should be_instance_of Supernova::Starbound::Protocol::Packet
-    encrypted.body.bytesize.should eq encrypted[:size]
+    expect(encrypted).to be_instance_of Supernova::Starbound::Protocol::Packet
+    expect(encrypted.body.bytesize).to eq encrypted[:size]
   end
 
   it "decrypts a packet successfully" do
@@ -48,7 +48,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
     encrypted_secret = subject.public_key
 
     secret = public_key.private_decrypt(encrypted_secret)
-    secret.should eq subject.options[:shared_secret]
+    expect(secret).to eq subject.options[:shared_secret]
 
     encrypted = subject.encrypt(@packet)
     decrypted = nil
@@ -57,7 +57,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
       decrypted = subject.decrypt(encrypted)
     }.to_not raise_error
 
-    decrypted.body.should eq @packet.body
+    expect(decrypted.body).to eq @packet.body
   end
 
   it "raises an error on non-matching hashes" do

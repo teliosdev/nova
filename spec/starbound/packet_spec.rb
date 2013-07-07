@@ -18,7 +18,7 @@ describe Supernova::Starbound::Protocol::Packet do
 
       packet[:packet_type] = 1043
 
-      packet.type.should be 1043
+      expect(packet.type).to be 1043
     end
   end
 
@@ -34,7 +34,7 @@ describe Supernova::Starbound::Protocol::Packet do
     packet = SupernovaHelper.build_packet
     packet[:something] = 1
 
-    packet.should be_respond_to_missing :something
+    expect(packet).to be_respond_to_missing :something
   end
 
   context 'builds from socket' do
