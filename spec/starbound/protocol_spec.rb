@@ -74,6 +74,26 @@ describe Supernova::Starbound::Protocol do
       @thread.join
     end
 
+    it "closes the socket" do
+      pack = SupernovaHelper.packet_from_socket(@server_client)
+      @server_client.write SupernovaHelper.build_response(:protocol_version, Supernova::VERSION, pack)
 
+      encrypt = SupernovaHelper.packet_from_socket(@server_client)
+      encrypt.body.should eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
+      enc = Supernova::Starbound::Encryptors::RbNaCl.new
+      enc.private_key!
+
+      @server_client.write SupernovaHelper.build_response(:public_key, "rbnacl/1.0.0\n" + enc.public_key, encrypt)
+      response = SupernovaHelper.packet_from_socket(@server_client)
+      enc.other_public_key = response.body
+
+      subject.close
+
+      close = SupernovaHelper.packet_from_socket(@server_client)
+      close.type.should be :close
+      close.body.should eq "\x00"
+
+      subject.state.should be :offline
+    end
   end
 end
