@@ -8,8 +8,8 @@ describe Supernova::Starbound::Protocol do
   end
 
   after :each do
-    @client.close if @client
-    @server_client.close if @server_client
+    @client.close if @client && !@client.closed?
+    @server_client.close if @server_client && !@server_client.closed?
     @server.close if @server
     File.delete("protocol.sock")
   end
@@ -89,9 +89,10 @@ describe Supernova::Starbound::Protocol do
 
       subject.close
 
-      close = SupernovaHelper.packet_from_socket(@server_client)
+      close_enc = SupernovaHelper.packet_from_socket(@server_client)
+      close = enc.decrypt(close_enc)
       close.type.should be :close
-      close.body.should eq "\x00"
+      close.body.should eq "0"
 
       subject.state.should be :offline
     end
