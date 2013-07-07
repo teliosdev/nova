@@ -9,7 +9,7 @@ module Supernova
 
         # The socket to write data to.
         #
-        # @return [#read, #write, #flush]
+        # @return [#read, #write]
         attr_accessor :socket
 
         # The queue that holds messages.

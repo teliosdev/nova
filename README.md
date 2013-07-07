@@ -1,4 +1,5 @@
-# Supernova [![Build Status](https://travis-ci.org/redjazz96/supernova.png?branch=master)](https://travis-ci.org/redjazz96/supernova) [![Code Climate](https://codeclimate.com/github/redjazz96/supernova.png)](https://codeclimate.com/github/redjazz96/supernova)
+# Supernova
+[![Build Status](https://travis-ci.org/redjazz96/supernova.png?branch=master)](https://travis-ci.org/redjazz96/supernova) [![Code Climate](https://codeclimate.com/github/redjazz96/supernova.png)](https://codeclimate.com/github/redjazz96/supernova) [![Coverage Status](https://coveralls.io/repos/redjazz96/supernova/badge.png?branch=master)](https://coveralls.io/r/redjazz96/supernova?branch=master)
 
 ![A Very Pretty Supernova](http://www.nasa.gov/centers/goddard/images/content/280046main_CassAcomposite_HI.jpg)
 
@@ -10,7 +11,7 @@ powerful.
 ## Great! How do I get started?
 It's not ready yet. It's still early in development, and there are a few things that need
 tweaking. As of right now, it's 100% documented, and completely written in Ruby.
-I have marked things that need to be done with a `@todo` tag. Go check it out if you want. 
+I have marked things that need to be done with a `@todo` tag. Go check it out if you want.
 There are a few things I plan on adding to Supernova before I release it.
 
 ## Terminology

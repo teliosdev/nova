@@ -56,7 +56,7 @@ module Supernova
           encryptor = matching_encryptor *response.body.split("\n", 2)
 
           respond_to response, :public_key, encryptor.public_key
-          self.encryption_provider = enc
+          self.encryption_provider = encryptor
         end
 
         # Handles the server encryption.  Reads a packet, splits the
