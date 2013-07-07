@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name              = "supernova"
   s.version           = Supernova::VERSION
   s.date              = Time.now.strftime('%Y-%m-%d')
-  s.summary           = "Feed me."
+  s.summary           = "Software management system.  Boom."
   s.homepage          = "http://github.com/redjazz96/supernova"
   s.email             = "redjazz96@gmail.com"
   s.authors           = [ "Jeremy Rodi" ]

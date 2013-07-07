@@ -15,9 +15,9 @@ describe Supernova::Starbound::Protocol do
   end
 
   it "initializes correctly" do
-    subject.should be_a Supernova::Starbound::Protocol
+    expect(subject).to be_a Supernova::Starbound::Protocol
 
-    subject.state.should be :offline
+    expect(subject.state).to be :offline
   end
 
   context "client performing handshake" do
@@ -29,9 +29,10 @@ describe Supernova::Starbound::Protocol do
       sleep 0.1
     end
 
-    it "should send the protocol version" do
+    it "sends the protocol version" do
       pack = SupernovaHelper.packet_from_socket(@server_client)
-      pack.body.should eq Supernova::VERSION
+      expect(pack.body).to eq Supernova::VERSION
+      expect(subject.state).to be :handshake
 
       @thread.exit
     end
@@ -51,7 +52,7 @@ describe Supernova::Starbound::Protocol do
       @server_client.write SupernovaHelper.build_response(:protocol_version, Supernova::VERSION, pack)
 
       encrypt = SupernovaHelper.packet_from_socket(@server_client)
-      encrypt.body.should eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
+      expect(encrypt.body).to eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
 
       @thread.exit
     end
@@ -61,7 +62,7 @@ describe Supernova::Starbound::Protocol do
       @server_client.write SupernovaHelper.build_response(:protocol_version, Supernova::VERSION, pack)
 
       encrypt = SupernovaHelper.packet_from_socket(@server_client)
-      encrypt.body.should eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
+      expect(encrypt.body).to eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
       enc = Supernova::Starbound::Encryptors::RbNaCl.new
       enc.private_key!
 
@@ -79,7 +80,7 @@ describe Supernova::Starbound::Protocol do
       @server_client.write SupernovaHelper.build_response(:protocol_version, Supernova::VERSION, pack)
 
       encrypt = SupernovaHelper.packet_from_socket(@server_client)
-      encrypt.body.should eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
+      expect(encrypt.body).to eq "rbnacl/1.0.0\nopenssl/rsa-4096/aes-256-cbc\nplaintext"
       enc = Supernova::Starbound::Encryptors::RbNaCl.new
       enc.private_key!
 
@@ -87,14 +88,76 @@ describe Supernova::Starbound::Protocol do
       response = SupernovaHelper.packet_from_socket(@server_client)
       enc.other_public_key = response.body
 
+      expect(subject.state).to be :online
+
       subject.close
 
       close_enc = SupernovaHelper.packet_from_socket(@server_client)
       close = enc.decrypt(close_enc)
-      close.type.should be :close
-      close.body.should eq "0"
+      expect(close.type).to be :close
+      expect(close.body).to eq "0"
 
-      subject.state.should be :offline
+      expect(subject.state).to be :offline
+    end
+  end
+
+  context "server performing handshake" do
+    subject { described_class.new(:type => :server) }
+
+    before :each do
+      subject.socket = @server_client
+      @thread = Thread.start { subject.handshake }
+      sleep 0.1
+    end
+
+    it "checks protocol versions" do
+      @client.write SupernovaHelper.build_packet(:protocol_version, "200.0.0")
+
+      expect {
+        @thread.join
+      }.to raise_error Supernova::Starbound::IncompatibleRemoteError
+    end
+
+    it "sends back the protocol version" do
+      @client.write SupernovaHelper.build_packet(:protocol_version, Supernova::VERSION)
+
+      version = SupernovaHelper.packet_from_socket(@client)
+      expect(version.body).to eq Supernova::VERSION
+      @thread.exit
+    end
+
+    it "selects the correct encryption" do
+      @client.write SupernovaHelper.build_packet(:protocol_version, Supernova::VERSION)
+      version = SupernovaHelper.packet_from_socket(@client)
+      @client.write SupernovaHelper.build_packet(:encryption_options, "rbnacl/1.0.0")
+      enc = SupernovaHelper.packet_from_socket(@client)
+      expect(enc.body.split("\n").first).to eq "rbnacl/1.0.0"
+      @thread.exit
+    end
+
+    it "does encryption" do
+      @client.write SupernovaHelper.build_packet(:protocol_version, Supernova::VERSION)
+      version = SupernovaHelper.packet_from_socket(@client)
+      @client.write SupernovaHelper.build_packet(:encryption_options, "rbnacl/1.0.0", :packet_id => 2, :nonce => "")
+      enc_packet = SupernovaHelper.packet_from_socket(@client)
+
+      enc = Supernova::Starbound::Encryptors::RbNaCl.new
+      enc.private_key!
+      enc.other_public_key = enc_packet.body.split("\n", 2).last
+
+      @client.write SupernovaHelper.build_response(:public_key, enc.public_key, enc_packet)
+
+      #expect(subject.state).to be :online
+      subject.on(:packet => :echo) { throw(:packet_echo) }
+      packet = SupernovaHelper.build_packet(:echo, "hello", :packet_id => 3)
+      enc_packet = enc.encrypt(packet)
+      @client.write enc_packet
+
+      expect {
+        subject.thread.join
+      }.to throw_symbol(:packet_echo)
+
+      @thread.join
     end
   end
 end

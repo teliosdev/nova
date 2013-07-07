@@ -19,7 +19,7 @@ module Supernova
   # The Supernova logger.  By default outputs to STDOUT.
   #
   # @return {Logger}
-  def logger
+  def self.logger
     @logger ||= Logger.new(STDOUT)
   end
 
@@ -33,11 +33,9 @@ module Supernova
   #   rest is ignored unless it's +:required_platforms+.
   # @yield [] to create the star.
   # @return [Class] the new star.
-  def create(options, &block)
+  def self.create(options, &block)
     Constructor.new(options, &block).modify_or_create
   end
-
-  extend self
 end
 
 # Creates or modifies a star, with the given options and block.
