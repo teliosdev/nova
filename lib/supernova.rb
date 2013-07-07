@@ -30,7 +30,7 @@ module Supernova
   #
   # @param options [Hash{Symbol => Symbol}] the first key value pair
   #   is used to determine the star type and star name, while the
-  #   rest is ignored unless it's +:required_platforms+.
+  #   rest is ignored.
   # @yield [] to create the star.
   # @return [Class] the new star.
   def self.create(options, &block)

@@ -6,20 +6,20 @@ module Supernova
   # This binds together all of our default includes.
   class Star
 
-    include Remote::Common::EventHandler
-    include Remote::Common::OptionsManager
-    include Remote::Common::StarManagement
-    include Remote::Common::Features
+    include Common::EventHandler
+    include Common::Metadata
+    include Common::StarManagement
+    include Common::Features
 
     star_type :star
 
-    # @!parse include Remote::Common::EventHandler::InstanceMethods
-    # @!parse extend Remote::Common::EventHandler::ClassMethods
-    # @!parse include Remote::Common::OptionsManager::InstanceMethods
-    # @!parse extend Remote::Common::OptionsManager::ClassMethods
-    # @!parse include Remote::Common::StarManagement::InstanceMethods
-    # @!parse extend Remote::Common::StarManagement::ClassMethods
-    # @!parse include Remote::Common::Features::InstanceMethods
-    # @!parse extend Remote::Common::Features::ClassMethods
+    # @!parse include Common::EventHandler::InstanceMethods
+    # @!parse extend Common::EventHandler::ClassMethods
+    # @!parse include Common::Metadata::InstanceMethods
+    # @!parse extend Common::Metadata::ClassMethods
+    # @!parse include Common::StarManagement::InstanceMethods
+    # @!parse extend Common::StarManagement::ClassMethods
+    # @!parse include Common::Features::InstanceMethods
+    # @!parse extend Common::Features::ClassMethods
   end
 end

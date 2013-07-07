@@ -39,6 +39,20 @@ module Supernova
           end
         end
 
+        # Tries to determine the version of the platform that this is
+        # running on.  If it can't, it returns nil.
+        #
+        # @return [nil, String] the platform version.
+        def platform_version
+          @_platform_version ||= begin
+            if File.exists?("/etc/lsb-release")
+              contents = File.open("/etc/lsb-release").read
+
+              contents.gsub(/^DISTRIB_RELEASE\=([a-zA-Z0-9\.]+)$/, "\\1")
+            end
+          end
+        end
+
         # @!method posix?
         #  True for linux? or osx?
         #  @api public

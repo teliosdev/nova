@@ -65,8 +65,10 @@ module Supernova
           include ClassMethods
 
           # Automatically binds the {Star} to itself on initialization.
-          def initialize(_ = nil)
-            bind! self
+          def initialize(*)
+            # This invalidates the method cache... there has to be a
+            # better way to do this...
+            bind.include remote
             super()
           end
 

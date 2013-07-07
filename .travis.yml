@@ -4,6 +4,9 @@ rvm:
   - jruby-19mode
   - rbx-19mode
   - 2.0.0
+  - 1.8.7
+  - jruby-18mode
+  - rbx-18mode
 script: "rspec spec"
 
 # Install libsodium.
@@ -15,3 +18,9 @@ before_install:
   - make -C ./libsodium-0.4 install
 
 env: "LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/sodium/lib"
+
+matrix:
+  allow_failures:
+    - rvm: 1.8.7
+    - rvm: jruby-18mode
+    - rvm: rbx-18mode

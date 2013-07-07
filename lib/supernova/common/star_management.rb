@@ -97,12 +97,6 @@ module Supernova
           # @return [Symbol]
           attr_accessor :type
 
-          # The platforms this star is compatible with.  Empty or nil
-          # for all platforms.
-          #
-          # @return [nil, Array<Symbol>]
-          attr_accessor :required_platforms
-
           # Retrieves the star with the given name.
           #
           # @example
@@ -125,11 +119,15 @@ module Supernova
           #
           # @raise [NoPlatformError] if it's not available on the
           #   platform.
-          def initialize(remote = nil)
-            @remote = remote || self.remote
-            diff = (self.class.required_platforms || []) - platform
-            raise NoPlatformError,
-              "Requires any of #{diff.join(', ')} to run on." unless diff.length == 0
+          def initialize(remote = nil, options = nil)
+            @remote = options ? remote : self.remote
+            self.options = if options
+              options
+            elsif remote
+              remote
+            else
+              {}
+            end
 
             super(remote)
           end
@@ -157,24 +155,6 @@ module Supernova
           end
 
           attr_writer :remote
-
-          # Forwards any unkown methods to the remote.
-          #
-          # @return [Object]
-          def method_missing(method, *arguments, &block)
-            if remote.respond_to?(method)
-              remote.send(method, *arguments, &block)
-            else
-              super
-            end
-          end
-
-          # Makes sure ruby knows we're forwarding unknown methods.
-          #
-          # @return [Boolean]
-          def respond_to_missing?(method, include_private = false)
-            remote.respond_to?(method, include_private)
-          end
 
         end
 

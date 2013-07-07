@@ -45,8 +45,7 @@ module Supernova
     def data
       @_data ||= {
         :as   => @options.values.first,
-        :type => @options.keys.first,
-        :required_platforms => [@options[:requires]].flatten.compact
+        :type => @options.keys.first
       }
     end
 
@@ -61,7 +60,6 @@ module Supernova
       star = Star.stars[data[:type]][data[:as]]
 
       star.class_exec &@block
-      star.required_platforms.push(*data[:required_platforms])
 
       star
     end
@@ -79,7 +77,6 @@ module Supernova
       new_star.type = data[:type]
       new_star.class_exec &@block
 
-      new_star.required_platforms = data[:required_platforms]
       Star.stars[data[:type]][data[:as]] = new_star
     end
 
