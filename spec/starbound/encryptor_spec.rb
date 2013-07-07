@@ -25,6 +25,8 @@ describe Supernova::Starbound::Encryptor do
         :other_public_key=].each do |m|
 
         expect(subject).to respond_to m
+
+        expect { subject.send(m) }.to raise_error NotImplementedError
       end
     end
   end
