@@ -39,7 +39,6 @@ module Supernova
         def decrypt(packet)
           packet = packet.clone
 
-          packet[:nonce] = RANDOM.bytes(24)
           packet
         end
 

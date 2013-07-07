@@ -36,8 +36,8 @@ module Supernova
           packet.body = box.decrypt(packet[:nonce], packet[:body])
 
           packet
-        rescue Crypto::BadSignatureError => e
-          raise InvalidDigestError, e
+        rescue Crypto::CryptoError => e
+          raise EncryptorError, e
         end
 
         # Generates a private key.

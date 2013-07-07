@@ -30,8 +30,9 @@ module Supernova
     # expected.  Used in {Protocol::Packet}.
     class UnacceptablePacketError < ProtocolError; end
 
-    # Raised if the given digest does not match the packet.  Used in
-    # {Encryptors::OpenSSL}.
-    class InvalidDigestError < StandardError; end
+    # Raised if the encryptor runs into an error with encrypting
+    # or decrypting the packet.  Used in {Encryptors::OpenSSL} and
+    # {Encryptors::RbNaCl}.
+    class EncryptorError < StandardError; end
   end
 end

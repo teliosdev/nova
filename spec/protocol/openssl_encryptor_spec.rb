@@ -70,11 +70,11 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
     subject.other_public_key = encrypted_secret
 
     encrypted = subject.encrypt(@packet)
-    encrypted.body.gsub!(/\A.{64}/, "\x00" * 64)
+    encrypted.body.replace("\x00" * encrypted.size)
 
     expect {
       subject.decrypt(encrypted)
-    }.to raise_error(Supernova::Starbound::InvalidDigestError)
+    }.to raise_error(Supernova::Starbound::EncryptorError)
   end
 
 end

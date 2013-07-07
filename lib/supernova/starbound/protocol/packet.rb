@@ -128,10 +128,10 @@ module Supernova
         def self.from_socket(sock)
           # we're gonna read one byte to see what type of packet it
           # is, a response or a regular packet.
-          struct_type_num = sock.read(4)
+          struct_type_num = sock.read(1)
 
           struct_type = Structs.key(
-            struct_type_num.unpack("i<").first)
+            struct_type_num.unpack("c").first)
 
           unless struct_type
             raise NoStructError,
@@ -166,7 +166,7 @@ module Supernova
         #
         # @return [String]
         def to_s
-          @_cache ||= [Structs[@struct]].pack("i<") +
+          @_cache ||= [Structs[@struct]].pack("c") +
             Packet.struct[@struct].pack(@data)
         end
 

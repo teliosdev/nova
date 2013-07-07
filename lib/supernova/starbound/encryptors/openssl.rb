@@ -58,7 +58,7 @@ module Supernova
           actual_body = packet[:body][64..-1]
 
           if hmac_digest(actual_body) != digest
-            raise InvalidDigestError
+            raise EncryptorError, "Digest doesn't match the body."
           end
 
           packet.body = decipher.update(actual_body) +
