@@ -1,4 +1,4 @@
-describe Supernova::Starbound::Encryptors::Plaintext do
+describe Nova::Starbound::Encryptors::Plaintext do
   it "is available" do
     expect(described_class).to be_available
   end
@@ -8,7 +8,7 @@ describe Supernova::Starbound::Encryptors::Plaintext do
   end
 
   it "encrypts correctly" do
-    packet = SupernovaHelper.build_packet
+    packet = NovaHelper.build_packet
 
     out_packet = subject.encrypt(packet)
     expect(out_packet.body).to eq packet.body
@@ -16,7 +16,7 @@ describe Supernova::Starbound::Encryptors::Plaintext do
   end
 
   it "decrypts correctly" do
-    packet = SupernovaHelper.build_packet
+    packet = NovaHelper.build_packet
 
     packet[:nonce] = Random.new.bytes(24)
     out_packet = subject.decrypt(packet)

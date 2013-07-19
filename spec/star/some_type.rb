@@ -1,7 +1,7 @@
-class SomeType < Supernova::Star
+class SomeType < Nova::Star
   star_type :some_type
 
-  with_options do
+  metadata do
     require_options :hello
   end
 

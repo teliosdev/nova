@@ -11,7 +11,6 @@ GEM
       simplecov (>= 0.7)
       thor
     diff-lcs (1.2.4)
-    fast_open_struct (0.1.0)
     ffi (1.9.0)
     mime-types (1.23)
     multi_json (1.7.7)
@@ -42,7 +41,6 @@ PLATFORMS
 DEPENDENCIES
   command-runner (~> 0.4)
   coveralls
-  fast_open_struct
   os (~> 0.9)
   packed_struct
   rbnacl

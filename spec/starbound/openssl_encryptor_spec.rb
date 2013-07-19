@@ -1,4 +1,4 @@
-describe Supernova::Starbound::Encryptors::OpenSSL do
+describe Nova::Starbound::Encryptors::OpenSSL do
 
   it "is available" do
     expect(described_class).to be_available
@@ -15,7 +15,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
   end
 
   before :each do
-    @packet = SupernovaHelper.build_packet
+    @packet = NovaHelper.build_packet
   end
 
   it "encrypts a packet successfully" do
@@ -35,7 +35,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
       encrypted = subject.encrypt(@packet)
     }.to_not raise_error
 
-    expect(encrypted).to be_instance_of Supernova::Starbound::Protocol::Packet
+    expect(encrypted).to be_instance_of Nova::Starbound::Protocol::Packet
     expect(encrypted.body.bytesize).to eq encrypted[:size]
   end
 
@@ -74,7 +74,7 @@ describe Supernova::Starbound::Encryptors::OpenSSL do
 
     expect {
       subject.decrypt(encrypted)
-    }.to raise_error(Supernova::Starbound::EncryptorError)
+    }.to raise_error(Nova::Starbound::EncryptorError)
   end
 
 end

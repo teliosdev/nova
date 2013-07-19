@@ -1,6 +1,6 @@
 require 'stringio'
 
-describe Supernova::Starbound::Protocol::Packet do
+describe Nova::Starbound::Protocol::Packet do
 
   context 'building responses' do
     subject { described_class.build_response :nul, "hello", :packet_id => 1, :packet_type => 1 }
@@ -23,15 +23,15 @@ describe Supernova::Starbound::Protocol::Packet do
   end
 
   it "sets up expectations" do
-    packet = SupernovaHelper.build_packet
+    packet = NovaHelper.build_packet
 
     expect {
       packet.expect(:echo)
-    }.to raise_error(Supernova::Starbound::UnacceptablePacketError)
+    }.to raise_error(Nova::Starbound::UnacceptablePacketError)
   end
 
   it "responds to missing methods" do
-    packet = SupernovaHelper.build_packet
+    packet = NovaHelper.build_packet
     packet[:something] = 1
 
     expect(packet).to be_respond_to_missing :something
@@ -54,7 +54,7 @@ describe Supernova::Starbound::Protocol::Packet do
 
       expect {
         described_class.from_socket(str)
-      }.to raise_error(Supernova::Starbound::NoStructError)
+      }.to raise_error(Nova::Starbound::NoStructError)
     end
   end
 

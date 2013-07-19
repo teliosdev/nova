@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-
-require 'rubygems'
-require 'thor'
-require 'supernova'
-require 'supernova/cli'
-
-Supernova::CLI.start

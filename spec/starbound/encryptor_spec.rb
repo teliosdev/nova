@@ -1,4 +1,4 @@
-describe Supernova::Starbound::Encryptor do
+describe Nova::Starbound::Encryptor do
 
   it "is not available" do
     expect(described_class).to_not be_available

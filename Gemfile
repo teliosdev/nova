@@ -6,5 +6,4 @@ gem 'rspec'
 gem 'coveralls', require: false
 gem 'rbnacl'
 gem 'packed_struct'
-gem 'fast_open_struct'
 gem 'thor'

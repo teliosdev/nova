@@ -1,32 +1,23 @@
 require_relative 'star/some_type'
 
-describe Supernova::Star do
+describe Nova::Star do
 
   before :each do
-    Supernova::Star.remote = Supernova::Remote::Fake
+    Nova::Star.remote = Nova::Remote::Fake
   end
 
   context "management" do
     it "handles types" do
-      expect(Supernova::Star.types).to eq(star: Supernova::Star, some_type: SomeType)
+      expect(Nova::Star.types).to eq(star: Nova::Star, some_type: SomeType)
     end
 
     it "has pretty inspect" do
-      expect(Supernova::Star.inspect).to eq("Supernova::Star")
-      expect(SomeType.inspect).to eq("Supernova::Star/SomeType")
+      expect(Nova::Star.inspect).to eq("Nova::Star")
+      expect(SomeType.inspect).to eq("Nova::Star/SomeType")
     end
 
     it "has a default remote" do
-      expect(SomeType.remote).to be(Supernova::Remote::Fake)
-    end
-
-    it "forwards methods to the remote" do
-      star = SomeType.new
-      star.remote = stub(:remote)
-      star.remote.should_receive(:respond_to?).with(:some_missing_method, false).and_return(true)
-      star.remote.should_receive(:some_missing_method).and_return(32)
-      expect(star.respond_to?(:some_missing_method)).to be true
-      expect(star.remote.some_missing_method).to be 32
+      expect(SomeType.remote).to be(Nova::Remote::Fake)
     end
   end
 
@@ -35,20 +26,13 @@ describe Supernova::Star do
       expect {
         star = SomeType.new
         star.options = {}
-      }.to raise_error(Supernova::InvalidOptionsError)
-    end
-
-    it "returns an Options instance" do
-      star = SomeType.new
-
-      star.options = { hello: :world }
-      expect(star.options).to be_instance_of Supernova::Remote::Common::OptionsManager::Options
+      }.to raise_error(Nova::InvalidOptionsError)
     end
   end
 
   context "event manager" do
     it "manages events" do
-      event = Supernova::Remote::Common::EventHandler::Event
+      event = Nova::Common::EventHandler::Event
       [SomeType, SomeType.new].each do |type|
         expect(type.events).to be_instance_of Set
         expect(type.has_event?(:foo)).to be_instance_of event
@@ -70,14 +54,14 @@ describe Supernova::Star do
 
       expect {
         star.run!(:bar)
-      }.to raise_error(Supernova::NoEventError)
-      expect(star.run(:bar)).to be_instance_of Supernova::NoEventError
+      }.to raise_error(Nova::NoEventError)
+      expect(star.run(:bar)).to be_instance_of Nova::NoEventError
       expect(star.run!(:bar, an_option: true)).to be 2
 
       expect {
         star.run! :not_an_event
-      }.to raise_error(Supernova::NoEventError)
-      expect(star.run(:not_an_event)).to be_instance_of Supernova::NoEventError
+      }.to raise_error(Nova::NoEventError)
+      expect(star.run(:not_an_event)).to be_instance_of Nova::NoEventError
     end
   end
 
@@ -110,14 +94,14 @@ describe Supernova::Star do
 
   context "platforms" do
     it "displays correct platforms" do
-      expect(SomeType.new.platform).to eq([])
+      expect(SomeType.new.remote.platform.types).to eq([])
     end
   end
 
   context "commands" do
     it "gives a command line" do
       star = SomeType.new
-      expect(star.line("something", "arguments")).to be_instance_of Command::Runner
+      expect(star.remote.command.line("something", "arguments")).to be_instance_of Command::Runner
     end
   end
 end

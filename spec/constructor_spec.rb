@@ -1,11 +1,11 @@
-describe Supernova::Constructor do
+describe Nova::Constructor do
 
   it "should create stars from types" do
     d = described_class.new(non_existant_star: :some_name) {}
 
     expect {
       d.modify_or_create
-    }.to raise_error(Supernova::NoStarError)
+    }.to raise_error(Nova::NoStarError)
 
     d = described_class.new(star: :some_name) do
       def some_method; 5; end
