@@ -10,8 +10,8 @@ script: "rspec spec"
 before_install:
   - wget http://download.libsodium.org/libsodium/releases/LATEST.tar.gz -O libsodium.tar.gz
   - tar xf libsodium.tar.gz
-  - "cd libsodium* && ./configure --prefix $TRAVIS_BUILD_DIR/sodium && cd ../"
-  - make -C ./libsodium*
-  - make -C ./libsodium* install
+  - "cd libsodium-* && ./configure --prefix $TRAVIS_BUILD_DIR/sodium && cd ../"
+  - make -C ./libsodium-*
+  - make -C ./libsodium-* install
 
 env: "LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/sodium/lib"
