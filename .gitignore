@@ -3,3 +3,4 @@ doc
 .rspec
 coverage
 test
+*.gem

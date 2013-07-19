@@ -6,20 +6,19 @@ Gem::Specification.new do |s|
   s.version           = Nova::VERSION
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "Software management system.  Boom."
-  s.homepage          = "http://github.com/redjazz96/nova"
+  s.homepage          = "http://redjazz96.github.io/nova/"
   s.email             = "redjazz96@gmail.com"
   s.authors           = [ "Jeremy Rodi" ]
   s.has_rdoc          = false
 
-  s.files             = %w( README.md Rakefile LICENSE )
+  s.files             = %w( README.md LICENSE )
   s.files            += Dir.glob("lib/**/*")
   s.files            += Dir.glob("bin/**/*")
-  s.files            += Dir.glob("man/**/*")
-  s.files            += Dir.glob("test/**/*")
+  s.files            += Dir.glob("spec/**/*")
 
 #  s.executables       = %w( Nova )
   s.description       = <<desc
-  Feed me.
+  Software management system.
 desc
 
   s.add_dependency 'command-runner', '~> 0.4'

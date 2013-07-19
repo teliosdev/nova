@@ -1,5 +1,5 @@
 # Nova
-[![Build Status](https://travis-ci.org/redjazz96/Nova.png?branch=master)](https://travis-ci.org/redjazz96/Nova) [![Code Climate](https://codeclimate.com/github/redjazz96/Nova.png)](https://codeclimate.com/github/redjazz96/Nova) [![Coverage Status](https://coveralls.io/repos/redjazz96/Nova/badge.png?branch=master)](https://coveralls.io/r/redjazz96/Nova?branch=master)
+[![Build Status](https://travis-ci.org/redjazz96/Nova.png?branch=master)](https://travis-ci.org/redjazz96/Nova) [![Code Climate](https://codeclimate.com/github/redjazz96/Nova.png)](https://codeclimate.com/github/redjazz96/Nova) [![Coverage Status](https://coveralls.io/repos/redjazz96/Nova/badge.png?branch=master)](https://coveralls.io/r/redjazz96/Nova?branch=master) [![Gem Version](https://badge.fury.io/rb/nova.png)](http://badge.fury.io/rb/nova)
 
 ![A Very Pretty Nova](http://i.imgur.com/48AoWKo.jpg)
 *Image credit to NASA*
