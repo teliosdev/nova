@@ -41,6 +41,7 @@ PLATFORMS
 DEPENDENCIES
   command-runner (~> 0.4)
   coveralls
+  multi_json (~> 1.0)
   os (~> 0.9)
   packed_struct
   rbnacl

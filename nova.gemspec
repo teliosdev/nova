@@ -25,6 +25,7 @@ desc
   s.add_dependency 'os', '~> 0.9'
   s.add_dependency 'packed_struct'
   s.add_dependency 'thor', '~> 0.18'
+  s.add_dependency 'multi_json', '~> 1.0'
 
   s.add_development_dependency 'rspec'
 end

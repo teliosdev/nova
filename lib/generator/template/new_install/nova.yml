@@ -1,7 +1,7 @@
 load_paths:
   - ./galaxy
 
-# If this is an array, every time we run +Nova server up+, multiple
+# If this is an array, every time we run +nova server up+, multiple
 # instances are created, each matching the values here.
 servers:
   - :name: tcp_server
@@ -10,7 +10,7 @@ servers:
     :port: 2010
   - :name: unix_server
     :type: :unix
-    :path: "./Nova.sock"
+    :path: "./nova.sock"
     :protocol:
       :allow_plaintext: true
 

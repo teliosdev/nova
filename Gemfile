@@ -7,3 +7,4 @@ gem 'coveralls', require: false
 gem 'rbnacl'
 gem 'packed_struct'
 gem 'thor'
+gem 'multi_json', '~> 1.0'

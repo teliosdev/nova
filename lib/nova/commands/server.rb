@@ -12,7 +12,7 @@ module Nova
         :desc => "Which servers to run.  Empty means all.",
         :default => []
       long_desc <<-DESC
-      Runs servers defined in Nova.yml.  If the forgeground
+      Runs servers defined in nova.yml.  If the forgeground
       option is specified, the process is run in the foreground.
       Otherwise, it's ran as a daemon.  If the which parameter is
       specified, it only runs the servers that were specified.

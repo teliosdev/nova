@@ -49,7 +49,9 @@ module Nova
           :close              => 0x05,
 
           # content
-          :echo               => 0x06
+          :echo               => 0x06,
+          :password           => 0x07,
+          :star_run           => 0x08
         }.freeze
 
         # Used internally to check the types of packets when

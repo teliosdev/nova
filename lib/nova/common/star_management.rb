@@ -108,6 +108,19 @@ module Nova
             super
           end
         end
+
+        # Retrieves a star from a given target.  The target should be
+        # in the format +[<type>.]<star name>[.<action>]+.
+        #
+        # @param target [String] the target star.
+        # @return [nil, Class] nil if the star doesn't exist, the star
+        #   itself otherwise.
+        def from_target(target)
+          type, star_name, action = target.scan(%r{\A(?:([\w]+)\.)?([\w]+)(?:\.([\w]+?))?\z}).first
+
+          type ||= :star
+          stars[type.intern][star_name.intern]
+        end
       end
 
       # Instance methods.

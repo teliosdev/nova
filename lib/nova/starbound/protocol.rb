@@ -3,6 +3,7 @@ require 'nova/starbound/protocol/encryption'
 require 'nova/starbound/protocol/messages'
 require 'nova/starbound/protocol/packet'
 require 'nova/starbound/protocol/socket'
+require 'nova/starbound/default_behavior'
 
 module Nova
   module Starbound
@@ -74,6 +75,13 @@ module Nova
         super()
 
         @state = :offline
+      end
+
+      # Sets up default behaviors within this protocol.
+      #
+      # @return [DefaultBehavior]
+      def default_behavior
+        @_default_behavior ||= DefaultBehavior.new(self)
       end
 
     end

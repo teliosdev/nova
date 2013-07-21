@@ -23,7 +23,9 @@ module Nova
     @logger ||= Logger.new(STDOUT)
   end
 
-  attr_writer :logger
+  class << self
+    attr_writer :logger
+  end
 
   # This creates a star with a given block, unless it already exists;
   # if it does, it just modifies that star.

@@ -45,7 +45,7 @@ module Nova
         # @option options [Symbol] :on the platform the event
         #   is written for.  If this doesn't match the current
         #   platform, the event is never run.  Must be in the
-        #   results of {Remote::Fake::Platforms#platform} (or
+        #   results of {Remote::Fake::Platform#types} (or
         #   remote's definition of platform).  Can also be +:for+.
         # @option options [Symbol, Array<Symbol>] :requires
         #   what options the event requires when being run.  The

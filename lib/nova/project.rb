@@ -121,7 +121,7 @@ module Nova
         if File.exists?(server[:files][:pid])
           pid = File.open(server[:files][:pid], "r") { |f| f.read }.to_i
 
-          puts "Sending INT to #{pid}..."
+          print "Sending INT to #{pid}... "
 
           Process.kill :INT, pid rescue Errno::ESRCH
 
@@ -187,9 +187,9 @@ module Nova
           File.delete(server[:files][:pid]) rescue Errno::ENOENT
         end
 
-        return s.listen
+        s.listen
       rescue => e
-        Nova.logger.fatal { "#{e}: #{e.message}; #{e.backtrace[0]}" }
+        Nova.logger.fatal { "#{e}: #{e.message} => #{e.backtrace[0]}" }
         File.delete(server[:files][:pid]) rescue Errno::ENOENT
         exit
       end

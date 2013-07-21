@@ -150,7 +150,7 @@ module Nova
           @_callbacks ||= Hash.new { |h, k| h[k] = [] }
         end
 
-        # Runs a callback.
+        # Runs a callback.  Automatically called by #wait_for_socket.
         #
         # @param struct [Symbol] the struct that the callback is for.
         # @param type [Symbol] the type of callback this is for.
@@ -219,7 +219,8 @@ module Nova
             packet = encryption_provider.decrypt(
               Packet.from_socket(socket))
 
-            run_callback packet.struct, packet.type, packet
+            run_callback packet.struct, packet.type, 
+              packet, self unless state == :handshake
           end
 
           packet
