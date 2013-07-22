@@ -1,3 +1,5 @@
 -I./lib
 -rnova
 -rspec_helper
+-f d
+--colour
