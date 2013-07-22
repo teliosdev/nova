@@ -123,7 +123,7 @@ module Nova
         def validate_options!(options)
           keys = options.keys
 
-          unless (data[:required_options] - keys).empty?
+          unless (data[:required_options].map(&:to_s) - keys).empty?
             raise InvalidOptionsError, "Missing options " +
               "#{(data[:required_options] - keys).join(', ')}"
           end

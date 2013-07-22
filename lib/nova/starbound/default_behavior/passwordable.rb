@@ -47,7 +47,7 @@ module Nova
         # matches, it returns an "OK" packet.  Otherwise, it returns a
         # "FAIL" packet.
         #
-        # @param packet [Packet] the packet that the client sent.
+        # @param packet [Protocol::Packet] the packet that the client sent.
         # @param proto [Protocol] the protocol used to communicate
         #   with the client.
         # @return [void]

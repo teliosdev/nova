@@ -1,4 +1,5 @@
 require 'nova/common/metadata/data'
+require 'nova/common/metadata/options'
 
 module Nova
   module Common
@@ -43,6 +44,7 @@ module Nova
 
         # Sets the options, validating them.
         def options=(options)
+          options = Options.new(options)
           @meta.validate_options! options
           @options = options
         end

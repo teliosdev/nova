@@ -97,9 +97,10 @@ module Nova
         # @return [Object] the result of the event.
         def run!(name, options = {})
           matched = has_event_with_options? name, options
+          new_options = Metadata::Options.new(options)
 
           if matched
-            matched.run(bind, options)
+            matched.run(bind, new_options)
           else
             raise NoEventError, "Could not find event #{name}."
           end

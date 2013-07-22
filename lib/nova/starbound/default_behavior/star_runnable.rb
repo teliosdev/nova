@@ -31,7 +31,7 @@ module Nova
 
         # Handles an incoming packet request for handling stars.
         #
-        # @param packet [Packet] the packet to handle.
+        # @param packet [Protocol::Packet] the packet to handle.
         # @param protocol [Protocol] the protocol.
         # @return [void]
         def handle_packet_star_run(packet, protocol)

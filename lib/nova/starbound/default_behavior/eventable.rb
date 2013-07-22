@@ -25,7 +25,7 @@ module Nova
           #   the packet type.
           # @param meth [nil, Symbol] the method name to use when
           #   calling a block.
-          # @yieldparam packet [Packet] the packet.
+          # @yieldparam packet [Protocol::Packet] the packet.
           # @yieldparam protocol [Protocol] the protocol.
           # @return [void]
           def handle(type, meth = nil, &block)
