@@ -5,7 +5,7 @@ module Nova
       # The platform information.
       #
       # @abstract
-      class Platform
+      class Platform < Part
 
         # The list of platforms that this platform matches.
         #

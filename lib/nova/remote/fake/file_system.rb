@@ -3,8 +3,11 @@ module Nova
     class Fake
 
       # Handles filesystem stuff, like downloading files and
-      # decompressing ifles.
-      class FileSystem
+      # decompressing fles.
+      #
+      # @abstract
+      class FileSystem < Part
+
         # Grabs the file from file and puts it somewhere else.  If
         # it's a local file (checked by #file_exists?), it just copies
         # it.  If it's not, it opens a connection to the server to try

@@ -6,7 +6,7 @@ module Nova
       # creating users.
       #
       # @abstract
-      class OperatingSystem
+      class OperatingSystem < Part
 
         # Creates a user with the given name and options.
         #
@@ -20,11 +20,17 @@ module Nova
         # @option options [Boolean] :nologin whether or not the user
         #   is able to log in.  Defaults to +false+.
         # @option options [String] :password the user's password.
-        #   Defaults to +nil+.
+        #   Defaults to +nil+, which gives it no password.  On
+        #   windows, this can be a security issue as anyone can log in
+        #   to an account with no password.
         # @return [Boolean] whether or not the user creation was
         #   successful.
         def create_user(name, options = {})
-          false
+          if remote.platform.windows?
+            windows_create_user(name, options)
+          else
+            linux_create_user(name, options)
+          end
         end
 
         # Installs packages for the corresponding operating system.
@@ -43,7 +49,74 @@ module Nova
         # @return [Boolean] whether or not the package installation
         #   was successful.
         def install_packages(packages)
-          false
+          out = true
+          packages.each do |platform, to_install|
+            if remote.platform.types.include?(platform)
+              out = out && install_command(platform).run(
+                packages: to_install.join(' ')).nonzero_exit?
+            end
+          end
+
+          out
+        end
+
+        private
+
+        # Create a user using the windows command line.  Unable to
+        # handle the +:system+ option from {#create_user}.
+        #
+        # @param name [String] the name of the user.
+        # @param options [Hash] see {#create_user}
+        # @return [Message] from running the command.
+        def windows_create_user(name, options)
+          line = remote.command.line("net", "user {username} {password} /add /Y {options}")
+
+          line.run(
+            username: name,
+            password: options[:password].to_s,
+            options: (if options[:nologin] then "/times: " else "" end)
+          )
+        end
+
+        # Create a user using the linux terminal.  If +:nologin+ is
+        # specified, the user has a shell of +/bin/false+.
+        #
+        # @todo more options, like home path.
+        # @param name [String] the name of the user.
+        # @param options [Hash] see {#create_user}
+        # @return [Message] from running the command.
+        def linux_create_user(name, options)
+          line = remote.command.line("useradd", "{username} --password {password} {options}")
+
+          opts = ""
+          opts << "--system " if options[:system]
+          opts << "--shell /bin/false" if options[:nologin]
+
+          line.run(
+            username: name,
+            password: options[:password],
+            options: opts
+          )
+        end
+
+        # Returns the relevant install command for the given platform.
+        # Returns a Command::Runner, which takes 1 argument parameter:
+        # +:packages+, which is a list of space-seperated package
+        # names to install.
+        # 
+        # @param platform [Symbol] the platform this is on.
+        # @return [Command::Runner]
+        def install_command(platform)
+          case platform
+          when :ubuntu
+            remote.command.line("apt-get", "install {packages}")
+          when :red_hat
+            remote.command.line("yum", "install {packages}")
+          when :arch
+            remote.command.line("pacman", "-S {packages}")
+          else
+            remote.command.line("false", "") # so we return a non-zero exit code
+          end
         end
 
       end

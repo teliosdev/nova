@@ -1,6 +1,9 @@
 module Nova
   module Starbound
     class DefaultBehavior
+
+      # Sets up the echo event on the protocol for the default
+      # behavior.
       module Echoable
         
         # Called when this module is included into another module.

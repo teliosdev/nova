@@ -6,7 +6,7 @@ module Nova
       # creating users.
       #
       # @abstract
-      class OperatingSystem
+      class OperatingSystem < Part
 
         # Creates a user with the given name and options.
         #

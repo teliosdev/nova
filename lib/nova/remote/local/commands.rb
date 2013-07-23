@@ -5,7 +5,7 @@ module Nova
     class Local
 
       # Manages running commands.
-      class Commands
+      class Commands < Part
 
         # Creates a CommandLine with its default runner.
         #
@@ -26,7 +26,7 @@ module Nova
         # @param command [String] the command to check the existance
         #   of.
         # @return [Boolean]
-        def command_exists?(command)
+        def exists?(command)
           not line("which", "{command}").run(command: command).nonzero_exit?
         end
 

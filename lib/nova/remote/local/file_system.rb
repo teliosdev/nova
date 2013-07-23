@@ -10,11 +10,14 @@ module Nova
     class Local
 
       # Handles filesystem stuff, like downloading files and
-      # decompressing ifles.
-      class FileSystem
+      # decompressing fles.
+      class FileSystem < Part
 
+        # How many bytes to read to a chunk.
         READ_CHUNKS = 2048
 
+        # The file where the CA Certs are stored.  This should be the
+        # file's contents, not the file itself.
         CACERT_FILE = File.open(File.expand_path("../../../../../cacert.pem", __FILE__), "r") { |f| f.read }
 
         # Grabs the file from file and puts it somewhere else.  If
@@ -142,7 +145,7 @@ module Nova
           end
 
           http.request_get(from.request_uri) do |response|
-            if response !== Net::HTTPOK
+            unless response === Net::HTTPOK
               raise response
             end
 

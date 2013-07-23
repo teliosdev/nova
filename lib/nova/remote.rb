@@ -1,4 +1,4 @@
-
+require 'nova/remote/part'
 
 module Nova
 
@@ -7,9 +7,10 @@ module Nova
 
     if ENV["NOVA_ENV"] == "testing"
       require 'nova/remote/fake'
+      require 'nova/remote/local'
     else
       autoload :Fake, "nova/remote/fake"
-      #autoload :Local, "nova/remote/local"
+      autoload :Local, "nova/remote/local"
       #autoload :SSH, "nova/remote/ssh"
     end
 

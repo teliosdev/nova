@@ -16,7 +16,7 @@ module Nova
       # @see Platform
       # @return [Platform]
       def platform
-        @_platform ||= Platform.new
+        @_platform ||= Remote::Fake::Platform.new(self)
       end
 
       # Returns a command instance.  Caches the instance across method
@@ -25,7 +25,7 @@ module Nova
       # @see Commands
       # @return [Commands]
       def command
-        @_command ||= Commands.new
+        @_command ||= Remote::Fake::Commands.new(self)
       end
 
       # Returns an operating system instance.  Caches the instance
@@ -34,7 +34,7 @@ module Nova
       # @see OperatingSystem
       # @return [OperatingSystem]
       def operating_system
-        @_operating_system ||= OperatingSystem.new
+        @_operating_system ||= Remote::Fake::OperatingSystem.new(self)
       end
 
       # Returns a file system instance.  Caches the instance across
@@ -43,7 +43,7 @@ module Nova
       # @see FileSystem
       # @return [FileSystem]
       def file_system
-        @_file_system ||= FileSystem.new
+        @_file_system ||= Remote::Fake::FileSystem.new(self)
       end
 
     end

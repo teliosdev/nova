@@ -37,8 +37,10 @@ module Nova
         def handle_packet_star_run(packet, protocol)
           raw = MultiJson.load packet.body
 
-          if raw["target"] && run_star(raw["target"], raw)
-          else
+          success = !!raw["target"]
+          success = success && run_star(raw["target"], raw)
+
+          unless success
             protocol.respond_to packet, :standard_error, "Unable to run #{raw["target"]}"
           end
 

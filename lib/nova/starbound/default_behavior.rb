@@ -6,6 +6,11 @@ require "multi_json"
 
 module Nova
   module Starbound
+
+    # Handles the default behavior of the protocol.  Attaches a few
+    # events to the protocol.
+    #
+    # @todo Add more behaviors.
     class DefaultBehavior
 
       include Eventable
