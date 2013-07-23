@@ -10,7 +10,7 @@ module Nova
     # running computer.
     #
     # @todo Add tests.
-    class Local < Remote::Fake
+    class Local
       
      # Returns a platform instance.  Caches the instance across
       # method calls.
