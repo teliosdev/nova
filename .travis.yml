@@ -4,7 +4,7 @@ rvm:
   - jruby-19mode
   - rbx-19mode
   - 2.0.0
-script: "rspec spec"
+script: "bundle exec rspec spec"
 
 # Install libsodium.
 before_install:

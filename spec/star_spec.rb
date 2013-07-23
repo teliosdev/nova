@@ -82,11 +82,11 @@ describe Nova::Star do
 
     it "runs enable and disable events" do
       star = SomeType.new
-      context = stub(:context)
+      context = double(:context)
       context.should_receive(:tag).with(:enable)
       expect(star.feature(:some_feature).bind(context).enable!).to be 3
 
-      context = stub(:context)
+      context = double(:context)
       context.should_receive(:tag).with(:disable)
       expect(star.feature(:some_feature).bind(context).disable!).to be 4
     end
