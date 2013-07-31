@@ -6,15 +6,16 @@ module Nova
       #
       # @note This stores everything in a hash, and all keys within
       #   hash are Strings, no matter what.
-      class Options < BasicObject
+      class Options < Hash
 
         # Initialize the options class.
         #
         # @param data [Hash] the data to represent with this
         #   class.
         def initialize(data)
-          @_data = data
+          merge! data
           _clean_data
+          freeze
         end
 
         # Accessor for this class.  Returns the default value if the
@@ -23,7 +24,7 @@ module Nova
         # @param key [#to_s] the key to look up.
         # @return [Object] the value.
         def [](key)
-          fetch(key) { default(key.to_s) }
+          self.fetch(key) { default(key.to_s) }
         end
 
         # Fetches the given key.  If it doesn't exist, uses the given
@@ -36,17 +37,7 @@ module Nova
         # @yieldreturn [Object] the value to use.
         # @return [Object] the value of the key.
         def fetch(key, *args, &block)
-          @_data.fetch(key.to_s, *args, &block)
-        end
-
-        # Forwards all methods to the hash. 
-        #
-        # @param method [Symbol] the method to forward.
-        # @param arguments [Array<Object>] the arguments for the
-        #   method.
-        # @return [Object]
-        def method_missing(method, *arguments, &block)
-          @_data.public_send(method, *arguments, &block)
+          coerce_to_options super(key.to_s, *args, &block)
         end
 
         private
@@ -58,11 +49,27 @@ module Nova
         def _clean_data
           new_data = {}
 
-          @_data.each do |k, v|
+          each do |k, v|
             new_data[k.to_s] = v
           end
 
-          @_data = new_data.freeze
+          replace(new_data)
+        end
+
+        # Coerces the given argument into an {Options} class.  Used for
+        # fetches.
+        #
+        # @param value [Object] the value to coerce.
+        # @return [Object] the coerced value (or the value itself if
+        #   it could not be coerced).
+        def coerce_to_options(value)
+          if value.is_a?(Hash)
+            Options.new(value)
+          elsif value.is_a?(Array)
+            value.map { |v| coerce_to_options(v) }
+          else
+            value
+          end
         end
 
       end

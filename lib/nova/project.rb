@@ -20,7 +20,7 @@ module Nova
 
     # The directory the project is based in.
     #
-    # @return [Directory]
+    # @return [Dir]
     attr_reader :directory
 
     # The load paths for this project.
@@ -63,7 +63,7 @@ module Nova
         File.absolute_path(path, directory.path)
       end
 
-      @options = data
+      @options = Common::Metadata::Options.new(data)
     end
 
     # Requires all of the star files that is in the project.

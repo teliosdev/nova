@@ -10,7 +10,7 @@ describe Nova::Starbound::Protocol do
   end
   
   around :each do |example|
-    Timeout::timeout(15) { example.run }
+    Timeout::timeout(30) { example.run }
   end
 
   after :each do

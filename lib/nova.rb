@@ -6,6 +6,7 @@ require 'nova/constructor'
 require 'nova/exceptions'
 require 'nova/remote'
 require 'nova/star'
+require 'nova/shell'
 
 require 'nova/starbound'
 

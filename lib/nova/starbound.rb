@@ -9,6 +9,7 @@ module Nova
     autoload :Encryptors, "nova/starbound/encryptors"
     autoload :Client, "nova/starbound/client"
     autoload :Server, "nova/starbound/server"
+    autoload :Cluster, "nova/starbound/cluster"
 
   end
 end

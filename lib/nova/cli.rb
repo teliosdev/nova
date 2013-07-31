@@ -43,6 +43,15 @@ module Nova
       end
     end
 
+    desc "cmd", "Opens a shell for use."
+    # Opens a blank shell using {Shell}.
+    #
+    # @return [void]
+    def cmd
+      cmd = Nova::Shell.new(self)
+      cmd.start_shell
+    end
+
     desc "server SUBCOMMAND [...ARGS]", "Manage Nova servers."
     subcommand "server", Commands::Server
 
